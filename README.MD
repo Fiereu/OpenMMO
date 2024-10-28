@@ -1,4 +1,9 @@
-# 🚧 OpenMMO 🚧
+# 🚧 OpenMMO 🚧 
+
+---
+
+[![](https://dcbadge.limes.pink/api/server/SQwGXyY2gz)](https://discord.gg/SQwGXyY2gz)
+![Java CI with Gradle](https://github.com/Fiereu/OpenMMO/actions/workflows/gradle.yml/badge.svg)
 
 > ❗OpenMMO is currently in development and not yet ready for any real use.
 
@@ -18,8 +23,6 @@ The Networking is a fully custom implementation using Java NIO.
 This project on the other hand uses the Netty library for networking. 
 
 > Why use Netty? idk, I just wanted to try it out.
-
-
 
 ## Status
 
