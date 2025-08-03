@@ -1,0 +1,14 @@
+plugins {
+  id("buildsrc.convention.kotlin-jvm")
+  id("buildsrc.convention.spotless")
+}
+
+dependencies {
+  api(libs.kotlinx.serialization.core)
+  api(libs.netty)
+
+  implementation(libs.slf4j)
+  implementation(libs.kotlin.logging)
+
+  testImplementation(libs.bundles.kotest)
+}

@@ -1,0 +1,11 @@
+services:
+  login-db:
+    image: postgres:latest
+    container_name: login-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: $LOGIN_DB_NAME
+      POSTGRES_USER: $LOGIN_DB_USER
+      POSTGRES_PASSWORD: $LOGIN_DB_PASSWORD
+    ports:
+      - $LOGIN_DB_PORT:5432

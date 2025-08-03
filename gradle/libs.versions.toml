@@ -1,0 +1,64 @@
+[versions]
+kotlin = "2.2.10"
+kotlinx-serialization = "1.9.0"
+kotlinx-coroutines = "1.10.2"
+kotlin-logging = "7.0.7" # sl4j wrapper for Kotlin
+logback = "1.5.13"
+slf4j = "2.0.17"
+asm = "9.8"
+spotless = "7.2.1"
+shadow = "9.0.2"
+bouncycastle = "1.81"
+junit5 = "6.0.0-M2"
+kotest = "6.0.0"
+mockk = "1.14.5"
+jooq = "3.20.6"
+postgresql = "42.7.7"
+flyway = "11.10.4"
+netty = "4.2.4.Final"
+typesafe-config = "1.4.4"
+dagger = "2.57"
+ksp = "2.2.10-2.0.2"
+
+[libraries]
+kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
+spotlessGradlePlugin = { module = "com.diffplug.spotless:spotless-plugin-gradle", version.ref = "spotless" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json-jvm", version.ref = "kotlinx-serialization" }
+kotlinx-coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlin-logging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+asm = { module = "org.ow2.asm:asm", version.ref = "asm" }
+bouncycastle-pkix = { module = "org.bouncycastle:bcpkix-jdk18on", version.ref = "bouncycastle" }
+bouncycastle-provider = { module = "org.bouncycastle:bcprov-jdk18on", version.ref = "bouncycastle" }
+junit5 = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junit5" }
+kotest-core = { module = "io.kotest:kotest-runner-junit5", version.ref = "kotest" }
+kotest-assertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotest" }
+kotest-framework = { module = "io.kotest:kotest-framework-engine", version.ref = "kotest" }
+jooq = { module = "org.jooq:jooq", version.ref = "jooq" }
+jooq-kotlin = { module = "org.jooq:jooq-kotlin", version.ref = "jooq" }
+jooq-meta = { module = "org.jooq:jooq-meta", version.ref = "jooq" }
+jooq-codegen = { module = "org.jooq:jooq-codegen", version.ref = "jooq" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+flyway-core = { module = "org.flywaydb:flyway-core", version.ref = "flyway" }
+flyway-postgresql = { module = "org.flywaydb:flyway-database-postgresql", version.ref = "flyway" }
+netty = { module = "io.netty:netty-all", version.ref = "netty" }
+typesafe-config = { module = "com.typesafe:config", version.ref = "typesafe-config" }
+dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
+dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+
+[bundles]
+crypto = ["bouncycastle-pkix", "bouncycastle-provider"]
+jooq = ["jooq", "jooq-kotlin", "jooq-meta", "jooq-codegen"]
+kotest = ["kotest-core", "kotest-assertions", "kotest-framework"]
+
+[plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+jooq = { id = "org.jooq.jooq-codegen-gradle", version.ref = "jooq" }
+flyway = { id = "org.flywaydb.flyway", version.ref = "flyway" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
