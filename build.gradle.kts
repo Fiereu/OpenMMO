@@ -1,6 +1,6 @@
 allprojects {
   beforeEvaluate {
-    loadEnvFile("${rootDir.absolutePath}/.env")
+    loadEnvFile("${rootDir.absolutePath}/gradle.env")
   }
 }
 

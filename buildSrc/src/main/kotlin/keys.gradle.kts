@@ -9,7 +9,6 @@ tasks.register<Copy>("copyPublicKeyChat") {
     include("*.public.pem")
   }
   into(project.layout.projectDirectory.dir(KEYS_RESOURCE_LOCATION))
-  tasks.getByName("processResources").let { it.mustRunAfter("copyPublicKeyChat") }
 }
 
 tasks.register<Copy>("copyPrivateKeyChat") {
@@ -19,7 +18,6 @@ tasks.register<Copy>("copyPrivateKeyChat") {
     include("*.public.pem")
   }
   into(project.layout.projectDirectory.dir(KEYS_RESOURCE_LOCATION))
-  tasks.getByName("processResources").let { it.mustRunAfter("copyPrivateKeyChat") }
 }
 
 tasks.register("copyKeysChat") {
@@ -35,7 +33,6 @@ tasks.register<Copy>("copyPublicKeyGame") {
     include("*.public.pem")
   }
   into(project.layout.projectDirectory.dir(KEYS_RESOURCE_LOCATION))
-  tasks.getByName("processResources").let { it.mustRunAfter("copyPublicKeyGame") }
 }
 
 tasks.register<Copy>("copyPrivateKeyGame") {
@@ -45,7 +42,6 @@ tasks.register<Copy>("copyPrivateKeyGame") {
     include("*.private.pem")
   }
   into(project.layout.projectDirectory.dir(KEYS_RESOURCE_LOCATION))
-  tasks.getByName("processResources").let { it.mustRunAfter("copyPrivateKeyGame") }
 }
 
 tasks.register("copyKeysGame") {
