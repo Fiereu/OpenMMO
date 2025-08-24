@@ -5,8 +5,8 @@ create table
 (
     id         serial      not null,
     created_at timestamp   not null default current_timestamp,
-    username   varchar(12) not null unique, -- SHA-1 hash of the password
-    password   bytea       not null,
+    username   varchar(12) not null unique,
+    password   bytea       not null, -- SHA-1 hash of the password
     primary key (id)
 );
 
