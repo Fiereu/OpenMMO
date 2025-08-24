@@ -6,6 +6,7 @@ plugins {
 dependencies {
   api(libs.kotlinx.serialization.core)
   api(libs.netty)
+  api(libs.ineter)
 
   implementation(libs.slf4j)
   implementation(libs.kotlin.logging)

@@ -1,5 +1,8 @@
 package de.fiereu.openmmo.protocols
 
+import com.github.maltalex.ineter.base.IPAddress
+import com.github.maltalex.ineter.base.IPv4Address
+import com.github.maltalex.ineter.base.IPv6Address
 import io.netty.buffer.ByteBuf
 
 fun ByteBuf.readCharLE(): Char {
@@ -25,4 +28,30 @@ fun ByteBuf.writeUtf16LE(value: String) {
     writeCharLE(c)
   }
   writeCharLE(0.toChar()) // Null-terminator
+}
+
+fun ByteBuf.readIpLE(): IPAddress {
+  val type = readUnsignedByte().toInt()
+  return when (type) {
+    4 -> {
+      val intValue = readIntLE()
+      IPv4Address.of(intValue)
+    }
+    6 -> {
+      val upper = readLongLE()
+      val lower = readLongLE()
+      IPv6Address.of(upper, lower)
+    }
+    else -> throw IllegalArgumentException("Unknown IP address type: $type")
+  }
+}
+
+fun ByteBuf.writeIpLE(ipAddress: IPAddress) {
+  if (ipAddress is IPv4Address) {
+    writeByte(4)
+    writeIntLE(ipAddress.toInt())
+  } else {
+    writeByte(6)
+    writeBytes(ipAddress.toArray())
+  }
 }
