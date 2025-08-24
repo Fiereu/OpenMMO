@@ -6,6 +6,9 @@ import de.fiereu.openmmo.protocols.outgoingPacket
 import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacket
 import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacketSerializer
+import de.fiereu.openmmo.protocols.tls.packets.LoginResponsePacket
+import de.fiereu.openmmo.protocols.tls.packets.LoginResponsePacketDeserializer
+import de.fiereu.openmmo.protocols.tls.packets.LoginResponsePacketSerializer
 
 /**
  * Login Protocol implementation.
@@ -18,12 +21,14 @@ abstract class LoginProtocol() : Protocol() {
 
 class LoginServerProtocol() : LoginProtocol() {
   init {
+    outgoingPacket(0x01u, LoginResponsePacket::class, LoginResponsePacketSerializer())
     incomingPacket(0x11u, LoginRequestPacketDeserializer())
   }
 }
 
 class LoginClientProtocol() : LoginProtocol() {
   init {
+    incomingPacket(0x01u, LoginResponsePacketDeserializer())
     outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
   }
 }
