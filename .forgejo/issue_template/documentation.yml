@@ -1,0 +1,103 @@
+name: "[DOCS] Documentation"
+description: Request or improve documentation
+title: "[DOCS] "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Request new documentation or improvements to existing documentation.
+
+  - type: dropdown
+    id: doc-type
+    attributes:
+      label: Documentation Type
+      description: What type of documentation is needed?
+      options:
+        - API Documentation
+        - Protocol/Packet Documentation
+        - Server Setup/Installation
+        - Configuration Guide
+        - Developer Guide
+        - Architecture/Design Docs
+        - Code Comments
+        - README Updates
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component/Module
+      description: Which part of the server needs documentation?
+      options:
+        - Login Server
+        - Game Server
+        - Protocol/Packets
+        - Database Schema
+        - Services
+        - Configuration
+        - Build/Deployment
+        - Overall Architecture
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Documentation Request
+      description: What documentation is missing or needs improvement?
+      placeholder: Describe what needs to be documented...
+    validations:
+      required: true
+
+  - type: dropdown
+    id: action
+    attributes:
+      label: Action Required
+      description: What needs to be done?
+      options:
+        - Create new documentation
+        - Update existing documentation
+        - Fix incorrect documentation
+        - Add code comments
+        - Improve clarity/examples
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: If updating existing docs, what's currently there?
+      placeholder: Link to existing docs or describe current documentation state...
+
+  - type: textarea
+    id: target-audience
+    attributes:
+      label: Target Audience
+      description: Who is this documentation for?
+      placeholder: |
+        - Server administrators
+        - Developers contributing to the project
+        - etc.
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High (Blocking development/usage)
+        - Medium (Helpful for productivity)
+        - Low (Nice to have)
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any specific requirements, examples, or references?
+      placeholder: Links to related code, external references, specific format requirements, etc.

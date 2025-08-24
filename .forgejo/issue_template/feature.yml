@@ -1,0 +1,106 @@
+name: "[FEATURE] New Feature"
+description: Request a new server feature or enhancement
+title: "[FEATURE] "
+labels: ["enhancement", "feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose a new feature or enhancement for the server.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Server Component
+      description: Which server component should implement this feature?
+      options:
+        - Login Server
+        - Game Server
+        - Protocol/Packets
+        - Database Layer
+        - Authentication System
+        - Session Management
+        - Network Layer
+        - Configuration System
+        - Monitoring/Logging
+        - Cross-Component
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: Describe the feature you'd like to see implemented
+      placeholder: What should this feature do?
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case/Problem
+      description: What problem does this feature solve?
+      placeholder: Why is this feature needed? What use case does it address?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How should this feature work?
+      placeholder: Describe your proposed implementation approach...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: What must be implemented for this feature to be complete?
+      placeholder: |
+        - [ ] Criterion 1
+        - [ ] Criterion 2
+        - [ ] Criterion 3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Critical (Core functionality)
+        - High (Important for next release)
+        - Medium (Would be nice to have)
+        - Low (Future enhancement)
+    validations:
+      required: true
+
+  - type: textarea
+    id: technical-considerations
+    attributes:
+      label: Technical Considerations
+      description: Any technical requirements, constraints, or considerations?
+      placeholder: |
+        - Performance requirements
+        - Compatibility concerns
+        - Security implications
+        - Database changes needed
+        - etc.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternative Solutions
+      description: Have you considered any alternative approaches?
+      placeholder: Other ways this could be implemented or alternative solutions...
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Any other relevant information, references, or examples?
+      placeholder: Links, mockups, related issues, external references, etc.

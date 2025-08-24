@@ -1,0 +1,119 @@
+name: "[TASK] General Task"
+description: General development task or maintenance work
+title: "[TASK] "
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Create a general development task for server maintenance, setup, or other work.
+
+  - type: dropdown
+    id: task-type
+    attributes:
+      label: Task Type
+      description: What type of task is this?
+      options:
+        - Development Task
+        - Maintenance/Cleanup
+        - Configuration/Setup
+        - Testing
+        - Build/Deployment
+        - Dependencies Update
+        - Performance Analysis
+        - Security Review
+        - Code Review
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component/Area
+      description: Which area does this task relate to?
+      options:
+        - Login Server
+        - Game Server
+        - Protocol/Packets
+        - Database
+        - Authentication System
+        - Session Management
+        - Network Layer
+        - Configuration
+        - Build System
+        - Testing Framework
+        - CI/CD
+        - Documentation
+        - Overall Project
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Task Description
+      description: What needs to be done?
+      placeholder: Clearly describe the task to be completed...
+    validations:
+      required: true
+
+  - type: textarea
+    id: requirements
+    attributes:
+      label: Requirements/Specifications
+      description: Any specific requirements or specifications for this task?
+      placeholder: |
+        - Requirement 1
+        - Requirement 2
+        - etc.
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: How will we know this task is complete?
+      placeholder: |
+        - [ ] Criteria 1
+        - [ ] Criteria 2
+        - [ ] Criteria 3
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - Urgent (Needs immediate attention)
+        - High (Should be done soon)
+        - Medium (Normal priority)
+        - Low (Can be done later)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: effort
+    attributes:
+      label: Estimated Effort
+      description: Rough estimate of effort required
+      options:
+        - XS (< 2 hours)
+        - S (2-8 hours)
+        - M (1-3 days)
+        - L (3-7 days)
+        - XL (> 1 week)
+        - Unknown
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Does this task depend on other tasks or external factors?
+      placeholder: List any blocking dependencies...
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes
+      description: Any other relevant information or context?
+      placeholder: Implementation notes, references, related issues, etc.

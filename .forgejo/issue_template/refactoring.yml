@@ -1,0 +1,98 @@
+name: "[REFACTOR] Code Refactoring"
+description: Improve code quality, structure, or performance
+title: "[REFACTOR] "
+labels: ["refactor"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Propose code refactoring to improve maintainability, performance, or code quality.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component/Module
+      description: Which part of the server needs refactoring?
+      options:
+        - Login Server
+        - Game Server
+        - Protocol/Packets
+        - Database Layer
+        - Network Layer
+        - Utilities/Common
+        - Build/Dependencies
+        - Tests
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: Refactoring Type
+      description: What kind of refactoring is needed?
+      options:
+        - Code Structure/Organization
+        - Project Structure/Organization
+        - Dependencies
+        - Error Handling
+        - Code Duplication Removal
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: current-state
+    attributes:
+      label: Current State
+      description: Describe the current code/implementation that needs refactoring
+      placeholder: What code needs to be improved and why?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution
+      description: How should the code be refactored?
+      placeholder: Describe the proposed changes and approach...
+    validations:
+      required: true
+
+  - type: textarea
+    id: benefits
+    attributes:
+      label: Benefits
+      description: What improvements will this refactoring provide?
+      placeholder: |
+        - Better performance
+        - Improved maintainability
+        - Reduced complexity
+        - etc.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - High (Blocking development)
+        - Medium (Should be done soon)
+        - Low (Nice to have)
+    validations:
+      required: true
+
+  - type: textarea
+    id: files-affected
+    attributes:
+      label: Files/Classes Affected
+      description: Which files or classes will be modified?
+      placeholder: List the main files or classes that will change...
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: Potential Risks
+      description: Any risks or breaking changes this refactoring might introduce?
+      placeholder: Consider backward compatibility, performance impacts, etc.

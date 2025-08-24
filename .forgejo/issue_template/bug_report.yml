@@ -1,0 +1,80 @@
+name: "[BUG] Bug Report"
+description: Report a server bug or issue
+title: "[BUG] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a server bug! Please provide details to help us fix the issue.
+
+  - type: dropdown
+    id: component
+    attributes:
+      label: Server Component
+      description: Which server component is affected?
+      options:
+        - Login Server
+        - Game Server
+        - Patcher
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: Clear description of the bug
+      placeholder: Describe what's wrong...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: How to reproduce this bug
+      placeholder: |
+        1. Start server with...
+        2. Did X in game...
+        3. Observe error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What should happen
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Severity
+      options:
+        - Critical (Server crash/security)
+        - High (Major feature broken)
+        - Medium (Feature partially works)
+        - Low (Minor issue)
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server Logs/Stack Trace
+      description: Relevant error logs or stack traces
+      render: text
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: |
+        - Java Version:
+        - Server Branch/Commit:
+        - Configuration:
+      render: markdown
