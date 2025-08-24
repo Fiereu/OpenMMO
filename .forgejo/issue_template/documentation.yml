@@ -14,12 +14,10 @@ body:
       label: Documentation Type
       description: What type of documentation is needed?
       options:
-        - API Documentation
-        - Protocol/Packet Documentation
+        - Developer Guide
         - Server Setup/Installation
         - Configuration Guide
-        - Developer Guide
-        - Architecture/Design Docs
+        - Protocol/Packet Documentation
         - Code Comments
         - README Updates
         - Other
