@@ -1,0 +1,3 @@
+[submodule "docs"]
+	path = docs
+	url = ssh://forge.fiereu.de/OpenMMO/OpenMMO.wiki
