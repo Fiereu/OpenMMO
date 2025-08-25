@@ -24,6 +24,9 @@ import de.fiereu.openmmo.protocols.tls.packets.LoginKickPacketSerializer
 import de.fiereu.openmmo.protocols.tls.packets.SentCredentialsPacket
 import de.fiereu.openmmo.protocols.tls.packets.SentCredentialsPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.SentCredentialsPacketSerializer
+import de.fiereu.openmmo.protocols.tls.packets.MfaChallengePacket
+import de.fiereu.openmmo.protocols.tls.packets.MfaChallengePacketDeserializer
+import de.fiereu.openmmo.protocols.tls.packets.MfaChallengePacketSerializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacket
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketSerializer
@@ -46,6 +49,7 @@ class LoginServerProtocol() : LoginProtocol() {
     incomingPacket(0x04u, ToSConfirmationPacketDeserializer())
     outgoingPacket(0x05u, LoginKickPacket::class, LoginKickPacketSerializer())
     outgoingPacket(0x07u, SentCredentialsPacket::class, SentCredentialsPacketSerializer())
+    outgoingPacket(0x08u, MfaChallengePacket::class, MfaChallengePacketSerializer())
     incomingPacket(0x11u, LoginRequestPacketDeserializer())
   }
 }
@@ -59,6 +63,7 @@ class LoginClientProtocol() : LoginProtocol() {
     outgoingPacket(0x04u, ToSConfirmationPacket::class, ToSConfirmationPacketSerializer())
     incomingPacket(0x05u, LoginKickPacketDeserializer())
     incomingPacket(0x07u, SentCredentialsPacketDeserializer())
+    incomingPacket(0x08u, MfaChallengePacketDeserializer())
     outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
   }
 }
