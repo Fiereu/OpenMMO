@@ -5,6 +5,7 @@ import de.fiereu.openmmo.protocols.PacketDeserializer
 import de.fiereu.openmmo.protocols.PacketSerializer
 import de.fiereu.openmmo.protocols.readUtf16LE
 import de.fiereu.openmmo.protocols.writeUtf16LE
+import io.netty.buffer.ByteBuf
 
 interface LoginMethod
 
@@ -25,7 +26,7 @@ data class LoginRequestPacket(
 )
 
 class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
-  override fun serialize(packet: LoginRequestPacket, buffer: io.netty.buffer.ByteBuf) {
+  override fun serialize(packet: LoginRequestPacket, buffer: ByteBuf) {
     buffer.writeUtf16LE(packet.username)
     buffer.writeBoolean(packet.manualLogin)
     buffer.writeByte(packet.hwid.size)
@@ -54,7 +55,7 @@ class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
 }
 
 class LoginRequestPacketDeserializer : PacketDeserializer<LoginRequestPacket> {
-  override fun deserialize(buffer: io.netty.buffer.ByteBuf): LoginRequestPacket {
+  override fun deserialize(buffer: ByteBuf): LoginRequestPacket {
     val username = buffer.readUtf16LE()
     val manualLogin = buffer.readBoolean()
 
