@@ -16,7 +16,7 @@ data class GameServerNode(
   val id: UByte,
   val iPv4Address: IPv4Address,
   val iPv6Address: IPv6Address,
-  val port: UShort
+  val port: UShort = 7777u
 )
 
 data class GameServerNodesPacket(
@@ -24,9 +24,9 @@ data class GameServerNodesPacket(
   val gameServerId: UByte,
   val userId: Int,
   val sessionToken: ByteArray,
-  val localAddress: IPAddress, // is 127.0.0.1 when connection to official login server
-  val localHostname: String, // is localhost when connection to official login server
-  val port: UShort,
+  val localAddress: IPAddress = IPAddress.of("127.0.0.1"),
+  val localHostname: String = "localhost",
+  val port: UShort = 7777u,
   val nodes: List<GameServerNode>
 )
 
