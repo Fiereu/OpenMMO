@@ -1,0 +1,55 @@
+name: "Pull Request"
+about: "Template for pull requests"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Description
+        Please provide a clear description of what this PR does.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: "Brief description of the changes"
+      placeholder: "What does this PR accomplish?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: "Type of Change"
+      description: "What type of change does this PR introduce?"
+      options:
+        - "Bug fix (non-breaking change which fixes an issue)"
+        - "New feature (non-breaking change which adds functionality)"
+        - "Breaking change (fix or feature that would cause existing functionality to not work as expected)"
+        - "Refactoring (no functional changes, no api changes)"
+        - "Documentation update"
+        - "Test changes"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: modules
+    attributes:
+      label: "Affected Modules"
+      description: "Which modules does this PR affect?"
+      options:
+        - label: "common/"
+        - label: "protocol/"
+        - label: "protocol.tls/"
+        - label: "protocol.login/"
+        - label: "server/"
+        - label: "server.login/"
+        - label: "keys/"
+        - label: "patcher/"
+        - label: "buildSrc/"
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: "Additional Notes"
+      description: "Any additional information or context"
+      placeholder: "Screenshots, links to issues, migration notes, etc."
