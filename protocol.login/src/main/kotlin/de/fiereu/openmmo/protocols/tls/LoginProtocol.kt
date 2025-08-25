@@ -39,6 +39,9 @@ import de.fiereu.openmmo.protocols.tls.packets.MfaResponsePacketSerializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacket
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketSerializer
+import de.fiereu.openmmo.protocols.tls.packets.ExistingSessionPacket
+import de.fiereu.openmmo.protocols.tls.packets.SentExistingSessionPacketDeserializer
+import de.fiereu.openmmo.protocols.tls.packets.SentExistingSessionPacketSerializer
 
 /**
  * Login Protocol implementation.
@@ -63,6 +66,7 @@ class LoginServerProtocol() : LoginProtocol() {
     incomingPacket(0x11u, LoginRequestPacketDeserializer())
     outgoingPacket(0x14u, ToSPacket::class, ToSPacketSerializer())
     outgoingPacket(0x22u, GameServerListPacket::class, GameServerListPacketSerializer())
+    outgoingPacket(0x26u, ExistingSessionPacket::class, SentExistingSessionPacketSerializer())
   }
 }
 
@@ -80,6 +84,7 @@ class LoginClientProtocol() : LoginProtocol() {
     outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
     incomingPacket(0x14u, ToSPacketDeserializer())
     incomingPacket(0x22u, GameServerListPacketDeserializer())
+    incomingPacket(0x26u, SentExistingSessionPacketDeserializer())
   }
 }
 
