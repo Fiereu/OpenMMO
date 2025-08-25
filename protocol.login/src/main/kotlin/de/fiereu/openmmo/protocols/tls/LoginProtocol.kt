@@ -18,6 +18,9 @@ import de.fiereu.openmmo.protocols.tls.packets.LoginResponsePacketSerializer
 import de.fiereu.openmmo.protocols.tls.packets.RequestGameServerListPacket
 import de.fiereu.openmmo.protocols.tls.packets.RequestGameServerListPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.RequestGameServerListPacketSerializer
+import de.fiereu.openmmo.protocols.tls.packets.LoginKickPacket
+import de.fiereu.openmmo.protocols.tls.packets.LoginKickPacketDeserializer
+import de.fiereu.openmmo.protocols.tls.packets.LoginKickPacketSerializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacket
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.ToSPacketSerializer
@@ -38,6 +41,7 @@ class LoginServerProtocol() : LoginProtocol() {
     incomingPacket(0x03u, JoinGameServerPacketDeserializer())
     outgoingPacket(0x03u, GameServerNodesPacket::class, GameServerNodesPacketSerializer())
     incomingPacket(0x04u, ToSConfirmationPacketDeserializer())
+    outgoingPacket(0x05u, LoginKickPacket::class, LoginKickPacketSerializer())
     incomingPacket(0x11u, LoginRequestPacketDeserializer())
   }
 }
@@ -49,6 +53,7 @@ class LoginClientProtocol() : LoginProtocol() {
     outgoingPacket(0x03u, JoinGameServerPacket::class, JoinGameServerPacketSerializer())
     incomingPacket(0x03u, GameServerNodesPacketDeserializer())
     outgoingPacket(0x04u, ToSConfirmationPacket::class, ToSConfirmationPacketSerializer())
+    incomingPacket(0x05u, LoginKickPacketDeserializer())
     outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
   }
 }

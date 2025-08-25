@@ -55,3 +55,14 @@ fun ByteBuf.writeIpLE(ipAddress: IPAddress) {
     writeBytes(ipAddress.toArray())
   }
 }
+
+fun ByteBuf.readIpRangeLE(): Pair<IPAddress, IPAddress> {
+  val start = readIpLE()
+  val end = readIpLE()
+  return Pair(start, end)
+}
+
+fun ByteBuf.writeIpRangeLE(start: IPAddress, end: IPAddress) {
+  writeIpLE(start)
+  writeIpLE(end)
+}
