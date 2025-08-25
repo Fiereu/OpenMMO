@@ -35,6 +35,7 @@ class DefaultTlsContext(
     private val decryptionCipher: Cipher // Client to server
     
     fun getClientSeed(): ByteArray = clientSeed.copyOf()
+    fun getServerSeed(): ByteArray = serverSeed.copyOf()
 
     init {
         val sharedSecret = performKeyAgreement(privateKey, publicKey)

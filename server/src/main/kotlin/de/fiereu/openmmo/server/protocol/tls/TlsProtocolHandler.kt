@@ -65,9 +65,10 @@ class TlsProtocolHandler(
       connectionKeyPair.second,
       event.packet.clientPublicKey
     )
-    val checksum = ChecksumFactory.create(tlsConfig.checksumSize, tlsContext.getClientSeed())
+    val checksumIncoming = ChecksumFactory.create(tlsConfig.checksumSize, tlsContext.getClientSeed())
+    val checksumOutgoing = ChecksumFactory.create(tlsConfig.checksumSize, tlsContext.getServerSeed())
 
-    channelHandlerProvider.switchChecksum(event.ctx, checksum)
+    channelHandlerProvider.switchChecksum(event.ctx, checksumIncoming, checksumOutgoing)
     channelHandlerProvider.switchTlsContext(event.ctx, tlsContext)
     channelHandlerProvider.enableProtocolHandler(event.ctx)
     log.info { "Client ${event.ctx.channel().remoteAddress()} completed TLS handshake. Switching to next protocol." }

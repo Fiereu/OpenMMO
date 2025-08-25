@@ -17,6 +17,8 @@ import de.fiereu.openmmo.server.protocol.tls.checksum.Checksum
 import de.fiereu.openmmo.server.protocol.tls.checksum.NoOpChecksum
 import io.netty.channel.ChannelHandlerContext
 import io.netty.channel.ChannelPipeline
+import io.netty.handler.logging.LogLevel
+import io.netty.handler.logging.LoggingHandler
 import io.netty.handler.timeout.WriteTimeoutHandler
 import java.util.concurrent.TimeUnit
 
@@ -38,6 +40,7 @@ class DefaultChannelHandlerProvider(
   override fun configurePipeline(pipeline: ChannelPipeline) {
     pipeline.addLast("timeout", WriteTimeoutHandler(serverConfig.writeTimeoutSeconds, TimeUnit.SECONDS))
 
+    pipeline.addLast("frame-logger", LoggingHandler("frame-logger", LogLevel.TRACE))
     pipeline.addLast("frame-decoder", PacketFrameDecoder())
     pipeline.addLast("frame-encoder", PacketFrameEncoder())
 
@@ -48,7 +51,7 @@ class DefaultChannelHandlerProvider(
     pipeline.addLast("tls-decryption", TlsDecryptionHandler(tlsContext))
     pipeline.addLast("tls-encryption", TlsEncryptionHandler(tlsContext))
 
-
+    pipeline.addLast("protocol-logger", LoggingHandler("protocol-logger", LogLevel.TRACE))
     pipeline.addLast("protocol", TlsProtocolHandler(tlsProtocol, tlsConfig, this))
   }
 
@@ -58,17 +61,18 @@ class DefaultChannelHandlerProvider(
    * Will be called from the [TlsProtocolHandler] once the handshake is complete and a checksum algorithm is negotiated.
    *
    * @param ctx The channel handler context.
-   * @param newChecksum The new checksum algorithm to use.
+   * @param newChecksumIncoming The new checksum algorithm for incoming packets.
+   * @param newChecksumOutgoing The new checksum algorithm for outgoing packets.
    */
-  fun switchChecksum(ctx: ChannelHandlerContext, newChecksum: Checksum) {
+  fun switchChecksum(ctx: ChannelHandlerContext, newChecksumIncoming: Checksum, newChecksumOutgoing: Checksum) {
     val pipeline = ctx.pipeline()
 
     if (pipeline.get("checksum-decoder") != null) {
-      pipeline.replace("checksum-decoder", "checksum-decoder", ChecksumFrameDecoder(newChecksum))
+      pipeline.replace("checksum-decoder", "checksum-decoder", ChecksumFrameDecoder(newChecksumIncoming))
     }
 
     if (pipeline.get("checksum-encoder") != null) {
-      pipeline.replace("checksum-encoder", "checksum-encoder", ChecksumFrameEncoder(newChecksum))
+      pipeline.replace("checksum-encoder", "checksum-encoder", ChecksumFrameEncoder(newChecksumOutgoing))
     }
   }
 
