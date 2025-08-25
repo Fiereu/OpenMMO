@@ -1,37 +1,27 @@
-import org.bouncycastle.util.io.pem.PemObject
-import org.bouncycastle.util.io.pem.PemWriter
+import java.io.StringWriter
 import java.security.KeyPairGenerator
 import java.security.spec.ECGenParameterSpec
-import java.io.StringWriter
+import org.bouncycastle.util.io.pem.PemObject
+import org.bouncycastle.util.io.pem.PemWriter
 
 buildscript {
-  repositories {
-    mavenCentral()
-  }
+  repositories { mavenCentral() }
 
-  dependencies {
-    classpath(libs.bundles.crypto)
-  }
+  dependencies { classpath(libs.bundles.crypto) }
 }
 
-plugins {
-  id("buildsrc.convention.spotless")
-}
+plugins { id("buildsrc.convention.spotless") }
 
-/**
- * Abstract task for generating a certificate.
- */
+/** Abstract task for generating a certificate. */
 abstract class GenerateCertificateTask : DefaultTask() {
 
-  @get:OutputFile
-  val privateKeyOutput: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile val privateKeyOutput: RegularFileProperty = project.objects.fileProperty()
 
-  @get:OutputFile
-  val publicKeyOutput: RegularFileProperty = project.objects.fileProperty()
+  @get:OutputFile val publicKeyOutput: RegularFileProperty = project.objects.fileProperty()
 
   @get:Input
-  val overwriteCertificates: Property<Boolean> = project.objects.property(Boolean::class.java)
-    .convention(false)
+  val overwriteCertificates: Property<Boolean> =
+      project.objects.property(Boolean::class.java).convention(false)
 
   init {
     group = "openmmo"
@@ -53,21 +43,23 @@ abstract class GenerateCertificateTask : DefaultTask() {
     val keyPair = keyPairGenerator.generateKeyPair()
 
     // Write private key as PEM
-    val privateKeyPem = StringWriter().use { writer ->
-      PemWriter(writer).use { pemWriter ->
-        pemWriter.writeObject(PemObject("EC PRIVATE KEY", keyPair.private.encoded))
-      }
-      writer.toString()
-    }
+    val privateKeyPem =
+        StringWriter().use { writer ->
+          PemWriter(writer).use { pemWriter ->
+            pemWriter.writeObject(PemObject("EC PRIVATE KEY", keyPair.private.encoded))
+          }
+          writer.toString()
+        }
     privateKeyFile.writeText(privateKeyPem)
 
     // Write public key as PEM
-    val publicKeyPem = StringWriter().use { writer ->
-      PemWriter(writer).use { pemWriter ->
-        pemWriter.writeObject(PemObject("PUBLIC KEY", keyPair.public.encoded))
-      }
-      writer.toString()
-    }
+    val publicKeyPem =
+        StringWriter().use { writer ->
+          PemWriter(writer).use { pemWriter ->
+            pemWriter.writeObject(PemObject("PUBLIC KEY", keyPair.public.encoded))
+          }
+          writer.toString()
+        }
     publicKeyFile.writeText(publicKeyPem)
   }
 }

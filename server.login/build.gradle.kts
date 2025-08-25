@@ -1,10 +1,6 @@
 import org.flywaydb.gradle.task.AbstractFlywayTask
 
-buildscript {
-  dependencies {
-    classpath(libs.flyway.postgresql)
-  }
-}
+buildscript { dependencies { classpath(libs.flyway.postgresql) } }
 
 plugins {
   application
@@ -18,6 +14,7 @@ plugins {
 }
 
 group = "de.fiereu.openmmo"
+
 version = "0.1.0"
 
 dependencies {
@@ -39,9 +36,7 @@ dependencies {
   testImplementation(libs.mockk)
 }
 
-application {
-  mainClass.set("de.fiereu.openmmo.server.login.LoginServerKt")
-}
+application { mainClass.set("de.fiereu.openmmo.server.login.LoginServerKt") }
 
 tasks.classes.get().apply {
   dependsOn("copyKeysGame")
@@ -49,22 +44,25 @@ tasks.classes.get().apply {
 }
 
 fun env(key: String): Any {
-  val value = property(key) ?:
-    System.getenv(key) ?:
-    throw IllegalArgumentException("Environment variable or system property '$key' is not set.")
+  val value =
+      property(key)
+          ?: System.getenv(key)
+          ?: throw IllegalArgumentException(
+              "Environment variable or system property '$key' is not set.")
   fun interpolate(value: String): Any {
     val PATTERN_WORD = Regex("\\$([a-zA-Z0-9_]+)")
     val PATTERN_MULTI = Regex("\\$\\{([a-zA-Z0-9_]+)\\}")
-    return (PATTERN_WORD.findAll(value) + PATTERN_MULTI.findAll(value))
-      .distinct()
-      .fold(value) { acc, match ->
-        val envName = match.groupValues[1]
-        val envValue = System.getProperty(envName) ?: System.getProperty(envName)
-        if (envValue == null) {
-          throw IllegalArgumentException("Environment variable or system property '$envName' is not set.")
-        }
-        acc.replace(match.value, envValue)
+    return (PATTERN_WORD.findAll(value) + PATTERN_MULTI.findAll(value)).distinct().fold(value) {
+        acc,
+        match ->
+      val envName = match.groupValues[1]
+      val envValue = System.getProperty(envName) ?: System.getProperty(envName)
+      if (envValue == null) {
+        throw IllegalArgumentException(
+            "Environment variable or system property '$envName' is not set.")
       }
+      acc.replace(match.value, envValue)
+    }
   }
   return if (value is String && (value.contains('$') || value.contains('{'))) {
     interpolate(value)
@@ -88,16 +86,15 @@ jooq {
       database {
         name = "org.jooq.meta.postgres.PostgresDatabase"
         includes = ".*"
-        excludes = """
+        excludes =
+            """
           flyway_schema_history |
           pgp_armor_headers
         """
         inputSchema = "public"
       }
 
-      generate {
-        name = "org.jooq.codegen.KotlinGenerator"
-      }
+      generate { name = "org.jooq.codegen.KotlinGenerator" }
       target {
         packageName = "de.fiereu.openmmo.server.login.jooq"
         directory = "src/main/jooq"
@@ -116,7 +113,8 @@ flyway {
   cleanDisabled = false
 }
 
-// Fuck this shit uhh we are not gonna update our gradle plugin bc all our enterprise customers are stuck on Java 1.6 and gradle 5 anyway
+// Fuck this shit uhh we are not gonna update our gradle plugin bc all our enterprise customers are
+// stuck on Java 1.6 and gradle 5 anyway
 tasks.withType<AbstractFlywayTask>().configureEach {
   notCompatibleWithConfigurationCache("https://github.com/flyway/flyway/issues/3550")
 }
@@ -125,4 +123,14 @@ tasks.register("cleanMigrateAndGenerate") {
   group = "openmmo"
   description = "Cleans the database, migrates it and generates the jOOQ classes."
   dependsOn("flywayClean", "flywayMigrate", "jooqCodegen")
+}
+
+spotless { kotlin { targetExclude("src/main/jooq/**") } }
+
+// If someone knows a better way then this please please please help me :(
+listOf("spotlessKotlinGradle", "spotlessMisc").forEach { taskName ->
+  tasks.named(taskName) {
+    dependsOn("copyPublicKeyGame")
+    dependsOn("copyPrivateKeyGame")
+  }
 }

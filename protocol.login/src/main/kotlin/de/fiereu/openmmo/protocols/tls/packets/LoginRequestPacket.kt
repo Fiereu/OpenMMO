@@ -9,18 +9,19 @@ import de.fiereu.openmmo.protocols.writeUtf16LE
 interface LoginMethod
 
 data class PasswordLogin(val password: String, val stayLoggedIn: Boolean) : LoginMethod
+
 data class TokenLogin(val token: ByteArray) : LoginMethod
 
 data class LoginRequestPacket(
-  val username: String,
-  val manualLogin: Boolean,
-  val hwid: ByteArray,
-  val method: LoginMethod,
-  val language: Language,
-  val clientRevision: Int,
-  val installationRevision: Int,
-  val os: UByte,
-  val hardwareInfoCache: ByteArray
+    val username: String,
+    val manualLogin: Boolean,
+    val hwid: ByteArray,
+    val method: LoginMethod,
+    val language: Language,
+    val clientRevision: Int,
+    val installationRevision: Int,
+    val os: UByte,
+    val hardwareInfoCache: ByteArray
 )
 
 class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
@@ -62,22 +63,23 @@ class LoginRequestPacketDeserializer : PacketDeserializer<LoginRequestPacket> {
     buffer.readBytes(hwid)
 
     val methodType = buffer.readByte().toInt()
-    val method: LoginMethod = when (methodType) {
-      0 -> { // Password
-        val password = buffer.readUtf16LE()
-        val stayLoggedIn = buffer.readBoolean()
-        PasswordLogin(password, stayLoggedIn)
-      }
+    val method: LoginMethod =
+        when (methodType) {
+          0 -> { // Password
+            val password = buffer.readUtf16LE()
+            val stayLoggedIn = buffer.readBoolean()
+            PasswordLogin(password, stayLoggedIn)
+          }
 
-      1 -> { // Token
-        val tokenSize = buffer.readUnsignedByte().toInt()
-        val token = ByteArray(tokenSize)
-        buffer.readBytes(token)
-        TokenLogin(token)
-      }
+          1 -> { // Token
+            val tokenSize = buffer.readUnsignedByte().toInt()
+            val token = ByteArray(tokenSize)
+            buffer.readBytes(token)
+            TokenLogin(token)
+          }
 
-      else -> throw IllegalArgumentException("Unknown login method type: $methodType")
-    }
+          else -> throw IllegalArgumentException("Unknown login method type: $methodType")
+        }
 
     val languageCode = buffer.readUtf16LE()
     val language = Language.fromCode(languageCode)
@@ -91,15 +93,14 @@ class LoginRequestPacketDeserializer : PacketDeserializer<LoginRequestPacket> {
     buffer.readBytes(hardwareInfoCache)
 
     return LoginRequestPacket(
-      username,
-      manualLogin,
-      hwid,
-      method,
-      language,
-      clientRevision,
-      installationRevision,
-      os,
-      hardwareInfoCache
-    )
+        username,
+        manualLogin,
+        hwid,
+        method,
+        language,
+        clientRevision,
+        installationRevision,
+        os,
+        hardwareInfoCache)
   }
 }

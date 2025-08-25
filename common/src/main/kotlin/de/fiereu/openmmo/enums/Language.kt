@@ -1,10 +1,6 @@
 package de.fiereu.openmmo.common.enums
 
-enum class Language(
-  val code: String,
-  private val english: String,
-  private val display: String
-) {
+enum class Language(val code: String, private val english: String, private val display: String) {
   EN("en", "english", "English"),
   FR("fr", "french", "Français"),
   DE("de", "german", "Deutsch"),

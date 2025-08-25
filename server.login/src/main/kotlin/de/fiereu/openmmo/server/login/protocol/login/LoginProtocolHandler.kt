@@ -12,8 +12,8 @@ import kotlinx.coroutines.launch
 private val log = KotlinLogging.logger {}
 
 class LoginProtocolHandler(
-  protocol: Protocol,
-  private val coroutineScope: CoroutineScope,
+    protocol: Protocol,
+    private val coroutineScope: CoroutineScope,
 ) : ProtocolHandler(protocol) {
 
   override fun onActive(ctx: ChannelHandlerContext) {

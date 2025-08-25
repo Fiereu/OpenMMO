@@ -3,14 +3,13 @@ package de.fiereu.openmmo.protocols.tls.util
 import java.math.BigInteger
 import java.security.AlgorithmParameters
 import java.security.KeyFactory
-import java.security.Security
+import java.security.Signature
+import java.security.interfaces.ECPrivateKey
 import java.security.interfaces.ECPublicKey
 import java.security.spec.ECGenParameterSpec
 import java.security.spec.ECParameterSpec
 import java.security.spec.ECPoint
 import java.security.spec.ECPublicKeySpec
-import java.security.Signature
-import java.security.interfaces.ECPrivateKey
 
 private const val uncompressedPointIndicator: Byte = 0x04
 

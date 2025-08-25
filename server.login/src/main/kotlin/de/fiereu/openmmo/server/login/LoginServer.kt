@@ -12,20 +12,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 
 fun main() {
-  val serverConfig = ServerConfig(
-    port = 2106
-  )
-  val tlsConfig = TlsConfig(
-    checksumSize = 16
-  )
+  val serverConfig = ServerConfig(port = 2106)
+  val tlsConfig = TlsConfig(checksumSize = 16)
   val coroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
-  val server = ServerBuilder.create()
-    .withCoroutineScope(coroutineScope)
-    .withConfig(serverConfig)
-    .withTlsConfig(tlsConfig)
-    .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
-    .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
-    .withChannelHandlerProvider { LoginProtocolHandler(LoginServerProtocol(), coroutineScope) }
-    .build()
+  val server =
+      ServerBuilder.create()
+          .withCoroutineScope(coroutineScope)
+          .withConfig(serverConfig)
+          .withTlsConfig(tlsConfig)
+          .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
+          .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
+          .withChannelHandlerProvider {
+            LoginProtocolHandler(LoginServerProtocol(), coroutineScope)
+          }
+          .build()
   server.start()
 }

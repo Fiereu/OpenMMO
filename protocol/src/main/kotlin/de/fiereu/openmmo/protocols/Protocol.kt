@@ -4,20 +4,17 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.buffer.ByteBuf
 import kotlin.reflect.KClass
 
-/**
- * Value class wrapping a UByte to represent an opcode.
- */
+/** Value class wrapping a UByte to represent an opcode. */
 @JvmInline
 value class Opcode(val value: UByte) {
   override fun toString(): String = "0x${value.toString(16).padStart(2, '0').uppercase()}"
 }
 
 /**
- * Packet direction enum representing the direction of packet flow.
- * This is needed because depending on the current side (client or server),
- * the same opcode can represent different packets.
- * For example, opcode 0x01 might represent a "LoginRequest" packet on the client side,
- * but a "LoginResponse" packet on the server side.
+ * Packet direction enum representing the direction of packet flow. This is needed because depending
+ * on the current side (client or server), the same opcode can represent different packets. For
+ * example, opcode 0x01 might represent a "LoginRequest" packet on the client side, but a
+ * "LoginResponse" packet on the server side.
  */
 enum class PacketDirection {
   CLIENT_TO_SERVER,
@@ -26,9 +23,9 @@ enum class PacketDirection {
 
 interface PacketSerializer<T : Any> {
   fun serializeObject(packet: Any, buffer: ByteBuf) {
-    @Suppress("UNCHECKED_CAST")
-    serialize(packet as T, buffer)
+    @Suppress("UNCHECKED_CAST") serialize(packet as T, buffer)
   }
+
   fun serialize(packet: T, buffer: ByteBuf)
 }
 
@@ -37,12 +34,12 @@ interface PacketDeserializer<T : Any> {
 }
 
 /**
- * The base class for all protocols.
- * A protocol is a collection of packets that can be sent and received.
+ * The base class for all protocols. A protocol is a collection of packets that can be sent and
+ * received.
  *
- * We cant combine Server and Client protocols because they have different dependencies.
- * For example, the server protocol needs to know about the server's root private key,
- * while the client protocol should not have any knowledge about the server's private key.
+ * We cant combine Server and Client protocols because they have different dependencies. For
+ * example, the server protocol needs to know about the server's root private key, while the client
+ * protocol should not have any knowledge about the server's private key.
  */
 abstract class Protocol {
   private val log = KotlinLogging.logger {}
@@ -56,21 +53,22 @@ abstract class Protocol {
     return dataClassToOpcode[dataClass]
   }
 
-  fun <T : Any> registerIncoming(
-    opcode: Opcode,
-    deserializer: PacketDeserializer<T>
-  ) {
-    log.debug { "Registering incoming packet: opcode=$opcode, deserializer=${deserializer::class.simpleName}" }
+  fun <T : Any> registerIncoming(opcode: Opcode, deserializer: PacketDeserializer<T>) {
+    log.debug {
+      "Registering incoming packet: opcode=$opcode, deserializer=${deserializer::class.simpleName}"
+    }
 
     incomingPacketRegistry.put(opcode, deserializer)
   }
 
   fun <T : Any> registerOutgoing(
-    opcode: Opcode,
-    dataClass: KClass<T>,
-    serializer: PacketSerializer<T>,
+      opcode: Opcode,
+      dataClass: KClass<T>,
+      serializer: PacketSerializer<T>,
   ) {
-    log.debug { "Registering outgoing packet: opcode=$opcode, serializer=${serializer::class.simpleName}" }
+    log.debug {
+      "Registering outgoing packet: opcode=$opcode, serializer=${serializer::class.simpleName}"
+    }
 
     dataClassToOpcode[dataClass] = opcode
     outgoingPacketRegistry.put(opcode, serializer)
@@ -89,18 +87,14 @@ fun Protocol.getDeserializer(opcode: UByte): PacketDeserializer<*>? {
   return this.getDeserializer(Opcode(opcode))
 }
 
-fun <T : Any> Protocol.incomingPacket(
-  opcode: UByte,
-  deserializer: PacketDeserializer<T>
-) {
+fun <T : Any> Protocol.incomingPacket(opcode: UByte, deserializer: PacketDeserializer<T>) {
   this.registerIncoming(Opcode(opcode), deserializer)
 }
 
 fun <T : Any> Protocol.outgoingPacket(
-  opcode: UByte,
-  dataClass: KClass<T>,
-  serializer: PacketSerializer<T>
+    opcode: UByte,
+    dataClass: KClass<T>,
+    serializer: PacketSerializer<T>
 ) {
   this.registerOutgoing(Opcode(opcode), dataClass, serializer)
 }
-

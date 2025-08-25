@@ -8,8 +8,8 @@ import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacketDeserializer
 import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacketSerializer
 
 /**
- * Login Protocol implementation.
- * This protocol handles the login process after the TLS handshake is complete.
+ * Login Protocol implementation. This protocol handles the login process after the TLS handshake is
+ * complete.
  */
 abstract class LoginProtocol() : Protocol() {
   override val async: Boolean
@@ -27,4 +27,3 @@ class LoginClientProtocol() : LoginProtocol() {
     outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
   }
 }
-

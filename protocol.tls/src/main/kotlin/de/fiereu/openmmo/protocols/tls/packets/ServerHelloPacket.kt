@@ -16,14 +16,10 @@ import java.security.interfaces.ECPublicKey
  * @property publicKey The public key generated for this connection.
  * @property checksumSize The size of the checksum used for this connection.
  */
-data class ServerHelloPacket(
-  val publicKey: ECPublicKey,
-  val checksumSize: Int
-)
+data class ServerHelloPacket(val publicKey: ECPublicKey, val checksumSize: Int)
 
-class ServerHelloPacketSerializer(
-  private val serverRootPrivateKey: ECPrivateKey
-) : PacketSerializer<ServerHelloPacket> {
+class ServerHelloPacketSerializer(private val serverRootPrivateKey: ECPrivateKey) :
+    PacketSerializer<ServerHelloPacket> {
 
   override fun serialize(packet: ServerHelloPacket, buffer: ByteBuf) {
     val publicKeyBytes = packet.publicKey.toUncompressedPoint()
@@ -39,12 +35,13 @@ class ServerHelloPacketSerializer(
   }
 }
 
-class ServerHelloPacketDeserializer : PacketDeserializer<ServerHelloPacketDeserializer.ServerHelloPacket> {
+class ServerHelloPacketDeserializer :
+    PacketDeserializer<ServerHelloPacketDeserializer.ServerHelloPacket> {
 
   data class ServerHelloPacket(
-    val clientPublicKey: PublicKey,
-    val signature: ByteArray,
-    val checksumSize: Int
+      val clientPublicKey: PublicKey,
+      val signature: ByteArray,
+      val checksumSize: Int
   )
 
   override fun deserialize(buffer: ByteBuf): ServerHelloPacket {

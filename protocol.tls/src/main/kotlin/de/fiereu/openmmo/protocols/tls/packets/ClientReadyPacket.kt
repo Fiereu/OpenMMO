@@ -7,9 +7,7 @@ import de.fiereu.openmmo.protocols.tls.util.toUncompressedPoint
 import io.netty.buffer.ByteBuf
 import java.security.interfaces.ECPublicKey
 
-data class ClientReadyPacket(
-  val clientPublicKey: ECPublicKey
-)
+data class ClientReadyPacket(val clientPublicKey: ECPublicKey)
 
 class ClientReadyPacketSerializer : PacketSerializer<ClientReadyPacket> {
 
