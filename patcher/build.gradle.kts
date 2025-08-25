@@ -67,9 +67,8 @@ tasks.register<JavaExec>("run") {
 
   mainClass.set(pokemmoMainClass)
   classpath(pokemmoExecutable)
-  jvmArgs =
-      listOf(
-          "-javaagent:$agentJar", // Attach Agent
-      )
+  jvmArgs(
+    "-javaagent:$agentJar" // Attach Agent
+  )
   workingDir = File(pokemmoWorkingDir)
 }
