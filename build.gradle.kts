@@ -21,3 +21,13 @@ fun loadEnvFile(fileName: String) {
     throw IllegalArgumentException("Env file '$fileName' does not exist.")
   }
 }
+
+tasks.register("runAll") {
+  group = "application"
+  description = "Runs all servers and the patcher"
+  listOf(
+    ":server.login:run",
+    ":server.game:run",
+    ":patcher:run"
+  ).forEach { dependsOn(it) }
+}

@@ -9,3 +9,13 @@ services:
       POSTGRES_PASSWORD: $LOGIN_DB_PASSWORD
     ports:
       - $LOGIN_DB_PORT:5432
+  game-db:
+    image: postgres:latest
+    container_name: login-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: $GAME_DB_NAME
+      POSTGRES_USER: $GAME_DB_USER
+      POSTGRES_PASSWORD: $GAME_DB_PASSWORD
+    ports:
+      - $GAME_DB_PORT:5432

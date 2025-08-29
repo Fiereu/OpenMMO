@@ -10,6 +10,7 @@ dependencies {
 
   implementation(libs.slf4j)
   implementation(libs.kotlin.logging)
+  implementation(libs.kotlin.reflect)
 
   testImplementation(libs.bundles.kotest)
 }

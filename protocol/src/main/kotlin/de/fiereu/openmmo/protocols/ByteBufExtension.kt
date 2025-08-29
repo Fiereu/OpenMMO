@@ -47,12 +47,21 @@ fun ByteBuf.readIpLE(): IPAddress {
 }
 
 fun ByteBuf.writeIpLE(ipAddress: IPAddress) {
-  if (ipAddress is IPv4Address) {
-    writeByte(4)
-    writeIntLE(ipAddress.toInt())
-  } else {
-    writeByte(6)
-    writeBytes(ipAddress.toArray())
+  when (ipAddress) {
+    is IPv4Address -> {
+      writeByte(4)
+      writeIntLE(ipAddress.toInt())
+    }
+
+    is IPv6Address -> {
+      writeByte(6)
+      writeLongLE(ipAddress.upper)
+      writeLongLE(ipAddress.lower)
+    }
+
+    else -> {
+      throw IllegalArgumentException("Unsupported IP address type: ${ipAddress::class}")
+    }
   }
 }
 

@@ -19,31 +19,24 @@ version = "0.1.0"
 
 dependencies {
   implementation(project(":server"))
-  implementation(project(":protocol.login"))
+  implementation(project(":protocol.game"))
   implementation(libs.logback)
   implementation(libs.kotlinx.coroutines)
-
-  runtimeOnly(libs.postgresql)
-
-  implementation(libs.bundles.jooq)
-  jooqCodegen(libs.postgresql)
-
-  implementation(libs.flyway.core)
-  implementation(libs.flyway.postgresql)
 
   testImplementation(libs.bundles.kotest)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.mockk)
 }
 
-application { mainClass.set("de.fiereu.openmmo.server.login.LoginServerKt") }
+application { mainClass.set("de.fiereu.openmmo.server.game.GameServerKt") }
+
 
 fun env(key: String): Any {
   val value =
-      property(key)
-          ?: System.getenv(key)
-          ?: throw IllegalArgumentException(
-              "Environment variable or system property '$key' is not set.")
+    property(key)
+      ?: System.getenv(key)
+      ?: throw IllegalArgumentException(
+        "Environment variable or system property '$key' is not set.")
   fun interpolate(value: String): Any {
     val PATTERN_WORD = Regex("\\$([a-zA-Z0-9_]+)")
     val PATTERN_MULTI = Regex("\\$\\{([a-zA-Z0-9_]+)\\}")
@@ -54,7 +47,7 @@ fun env(key: String): Any {
       val envValue = System.getProperty(envName) ?: System.getProperty(envName)
       if (envValue == null) {
         throw IllegalArgumentException(
-            "Environment variable or system property '$envName' is not set.")
+          "Environment variable or system property '$envName' is not set.")
       }
       acc.replace(match.value, envValue)
     }
@@ -64,10 +57,10 @@ fun env(key: String): Any {
   } else value
 }
 
-val dbPort = env("openmmo.db.login.port") as String
-val dbName = env("openmmo.db.login.name") as String
-val dbUser = env("openmmo.db.login.user") as String
-val dbPassword = env("openmmo.db.login.password") as String
+val dbPort = env("openmmo.db.game.port") as String
+val dbName = env("openmmo.db.game.name") as String
+val dbUser = env("openmmo.db.game.user") as String
+val dbPassword = env("openmmo.db.game.password") as String
 
 jooq {
   configuration {
@@ -82,7 +75,7 @@ jooq {
         name = "org.jooq.meta.postgres.PostgresDatabase"
         includes = ".*"
         excludes =
-            """
+          """
           flyway_schema_history |
           pgp_armor_headers
         """
@@ -91,7 +84,7 @@ jooq {
 
       generate { name = "org.jooq.codegen.KotlinGenerator" }
       target {
-        packageName = "de.fiereu.openmmo.server.login.jooq"
+        packageName = "de.fiereu.openmmo.server.game.jooq"
         directory = "src/main/jooq"
       }
     }
@@ -129,4 +122,3 @@ listOf("classes", "processResources", "spotlessKotlin", "spotlessKotlinGradle", 
       .forEach { dependsOn(it) }
   }
 }
-

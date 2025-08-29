@@ -12,22 +12,33 @@ import de.fiereu.openmmo.protocols.writeIpLE
 import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
+/**
+ * Nodes are address entries for game servers that the client can connect to.
+ * The nodes are selected by a weighted random algorithm on the client side.
+ * The weight is a value between 0 and 255, where 0 means the node
+ * will never be selected and 255 means the node will always be selected.
+ * Typically, nodes are assigned weights based on their capacity or priority.
+ */
 data class GameServerNode(
-  val id: UByte,
   val iPv4Address: IPv4Address,
   val iPv6Address: IPv6Address,
-  val port: UShort = 7777u
+  val port: UShort = 7777u,
+  val weight: UByte
+)
+
+data class GameServerData(
+  val gameServerId: UByte,
+  val userId: Int,
+  val sessionToken: ByteArray,
+  val localAddress: IPAddress,
+  val localHostname: String,
+  val port: UShort,
 )
 
 data class GameServerNodesPacket(
   val loginState: LoginState,
-  val gameServerId: UByte,
-  val userId: Int,
-  val sessionToken: ByteArray,
-  val localAddress: IPAddress = IPAddress.of("127.0.0.1"),
-  val localHostname: String = "localhost",
-  val port: UShort = 7777u,
-  val nodes: List<GameServerNode>
+  val gameServerData: GameServerData? = null,
+  val nodes: List<GameServerNode> = emptyList()
 )
 
 class GameServerNodesPacketSerializer : PacketSerializer<GameServerNodesPacket> {
@@ -37,48 +48,35 @@ class GameServerNodesPacketSerializer : PacketSerializer<GameServerNodesPacket> 
       return
     }
 
-    buffer.writeIntLE(packet.userId)
-    buffer.writeByte(packet.sessionToken.size)
-    buffer.writeBytes(packet.sessionToken)
+    val gsd = requireNotNull(packet.gameServerData) { "GameServerData must be provided for AUTHED state" }
 
-    buffer.writeByte(packet.gameServerId.toInt())
+    buffer.writeIntLE(gsd.userId)
+    buffer.writeByte(gsd.sessionToken.size)
+    buffer.writeBytes(gsd.sessionToken)
 
-    val localAddressBytes = packet.localAddress.toLittleEndianArray()
+    buffer.writeByte(gsd.gameServerId.toInt())
+
+    val localAddressBytes = gsd.localAddress.toBigEndianArray()
     buffer.writeByte(localAddressBytes.size)
     buffer.writeBytes(localAddressBytes)
-    buffer.writeUtf16LE(packet.localHostname)
+    buffer.writeUtf16LE(gsd.localHostname)
 
-    buffer.writeShortLE(packet.port.toInt())
+    buffer.writeIntLE(gsd.port.toInt())
 
     buffer.writeByte(packet.nodes.size)
-    for (node in packet.nodes) {
-      buffer.writeByte(0) // padding
+    for ((index, node) in packet.nodes.withIndex()) {
+      buffer.writeByte(index)
 
       buffer.writeIpLE(node.iPv4Address)
       buffer.writeIpLE(node.iPv6Address)
 
       buffer.writeShortLE(node.port.toInt())
-      buffer.writeByte(node.id.toInt())
+      buffer.writeByte(node.weight.toInt())
     }
   }
 }
 
-class GameServerNodesPacketDeserializer : PacketDeserializer<GameServerNodesPacketDeserializer.GameServerNodesPacket> {
-
-  open class GameServerNodesPacket(
-    open val loginState: LoginState
-  )
-
-  data class AuthedGameServerNodesPacket(
-    override val loginState: LoginState,
-    val gameServerId: UByte,
-    val userId: Int,
-    val sessionToken: ByteArray,
-    val localAddress: IPAddress,
-    val localHostname: String,
-    val port: UShort,
-    val nodes: List<GameServerNode>
-  ) : GameServerNodesPacket(loginState)
+class GameServerNodesPacketDeserializer : PacketDeserializer<GameServerNodesPacket> {
 
   override fun deserialize(buffer: ByteBuf): GameServerNodesPacket {
     val stateId = buffer.readUnsignedByte().toInt()
@@ -95,10 +93,12 @@ class GameServerNodesPacketDeserializer : PacketDeserializer<GameServerNodesPack
 
     val gameServerId = buffer.readUnsignedByte().toUByte()
 
-    val localAddress = buffer.readIpLE()
+    val localAddressBuffer = ByteArray(buffer.readUnsignedByte().toInt())
+    buffer.readBytes(localAddressBuffer)
+    val localAddress = IPAddress.of(localAddressBuffer)
     val localHostname = buffer.readUtf16LE()
 
-    val port = buffer.readUnsignedShortLE().toUShort()
+    val port = buffer.readUnsignedIntLE().toUShort()
 
     val nodeCount = buffer.readUnsignedByte().toInt()
     val nodes = mutableListOf<GameServerNode>()
@@ -109,19 +109,21 @@ class GameServerNodesPacketDeserializer : PacketDeserializer<GameServerNodesPack
       val iPv6Address = buffer.readIpLE() as IPv6Address
 
       val nodePort = buffer.readUnsignedShortLE().toUShort()
-      val nodeId = buffer.readUnsignedByte().toUByte()
+      val weight = buffer.readUnsignedByte().toUByte()
 
-      nodes.add(GameServerNode(nodeId, iPv4Address, iPv6Address, nodePort))
+      nodes.add(GameServerNode(iPv4Address, iPv6Address, nodePort, weight))
     }
 
-    return AuthedGameServerNodesPacket(
-      loginState,
-      gameServerId,
-      userId,
-      sessionToken,
-      localAddress,
-      localHostname,
-      port,
+    return GameServerNodesPacket(
+      LoginState.AUTHED,
+      GameServerData(
+        gameServerId,
+        userId,
+        sessionToken,
+        localAddress,
+        localHostname,
+        port
+      ),
       nodes
     )
   }

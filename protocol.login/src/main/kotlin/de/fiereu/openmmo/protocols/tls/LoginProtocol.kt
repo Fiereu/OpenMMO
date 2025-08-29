@@ -54,34 +54,34 @@ abstract class LoginProtocol() : Protocol() {
 
 class LoginServerProtocol() : LoginProtocol() {
   init {
-    outgoingPacket(0x01u, LoginResponsePacket::class, LoginResponsePacketSerializer())
+    outgoingPacket(0x01u, LoginResponsePacketSerializer(), LoginResponsePacket::class)
     incomingPacket(0x02u, RequestGameServerListPacketDeserializer())
     incomingPacket(0x03u, JoinGameServerPacketDeserializer())
-    outgoingPacket(0x03u, GameServerNodesPacket::class, GameServerNodesPacketSerializer())
+    outgoingPacket(0x03u, GameServerNodesPacketSerializer(), GameServerNodesPacket::class)
     incomingPacket(0x04u, ToSConfirmationPacketDeserializer())
-    outgoingPacket(0x05u, LoginKickPacket::class, LoginKickPacketSerializer())
-    outgoingPacket(0x07u, SentCredentialsPacket::class, SentCredentialsPacketSerializer())
-    outgoingPacket(0x08u, MfaChallengePacket::class, MfaChallengePacketSerializer())
+    outgoingPacket(0x05u, LoginKickPacketSerializer(), LoginKickPacket::class)
+    outgoingPacket(0x07u, SentCredentialsPacketSerializer(), SentCredentialsPacket::class)
+    outgoingPacket(0x08u, MfaChallengePacketSerializer(), MfaChallengePacket::class)
     incomingPacket(0x08u, MfaResponsePacketDeserializer())
     incomingPacket(0x11u, LoginRequestPacketDeserializer())
-    outgoingPacket(0x14u, ToSPacket::class, ToSPacketSerializer())
-    outgoingPacket(0x22u, GameServerListPacket::class, GameServerListPacketSerializer())
-    outgoingPacket(0x26u, ExistingSessionPacket::class, SentExistingSessionPacketSerializer())
+    outgoingPacket(0x14u, ToSPacketSerializer(), ToSPacket::class)
+    outgoingPacket(0x22u, GameServerListPacketSerializer(), GameServerListPacket::class)
+    outgoingPacket(0x26u, SentExistingSessionPacketSerializer(), ExistingSessionPacket::class)
   }
 }
 
 class LoginClientProtocol() : LoginProtocol() {
   init {
     incomingPacket(0x01u, LoginResponsePacketDeserializer())
-    outgoingPacket(0x02u, RequestGameServerListPacket::class, RequestGameServerListPacketSerializer())
-    outgoingPacket(0x03u, JoinGameServerPacket::class, JoinGameServerPacketSerializer())
+    outgoingPacket(0x02u, RequestGameServerListPacketSerializer(), RequestGameServerListPacket::class)
+    outgoingPacket(0x03u, JoinGameServerPacketSerializer(), JoinGameServerPacket::class)
     incomingPacket(0x03u, GameServerNodesPacketDeserializer())
-    outgoingPacket(0x04u, ToSConfirmationPacket::class, ToSConfirmationPacketSerializer())
+    outgoingPacket(0x04u, ToSConfirmationPacketSerializer(), ToSConfirmationPacket::class)
     incomingPacket(0x05u, LoginKickPacketDeserializer())
     incomingPacket(0x07u, SentCredentialsPacketDeserializer())
     incomingPacket(0x08u, MfaChallengePacketDeserializer())
-    outgoingPacket(0x08u, MfaResponsePacket::class, MfaResponsePacketSerializer())
-    outgoingPacket(0x11u, LoginRequestPacket::class, LoginRequestPacketSerializer())
+    outgoingPacket(0x08u, MfaResponsePacketSerializer(), MfaResponsePacket::class)
+    outgoingPacket(0x11u, LoginRequestPacketSerializer(), LoginRequestPacket::class)
     incomingPacket(0x14u, ToSPacketDeserializer())
     incomingPacket(0x22u, GameServerListPacketDeserializer())
     incomingPacket(0x26u, SentExistingSessionPacketDeserializer())

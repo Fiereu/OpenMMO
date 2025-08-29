@@ -30,15 +30,16 @@ class TlsServerProtocol(serverKeyPair: Pair<ECPrivateKey, ECPublicKey>) : TlsPro
   init {
     incomingPacket(0x00u, ClientHelloPacketDeserializer())
     outgoingPacket(
-        0x01u, ServerHelloPacket::class, ServerHelloPacketSerializer(serverKeyPair.first))
+      0x01u, ServerHelloPacketSerializer(serverKeyPair.first), ServerHelloPacket::class
+    )
     incomingPacket(0x02u, ClientReadyPacketDeserializer())
   }
 }
 
 class TlsClientProtocol() : TlsProtocol() {
   init {
-    outgoingPacket(0x00u, ClientHelloPacket::class, ClientHelloPacketSerializer())
+    outgoingPacket(0x00u, ClientHelloPacketSerializer(), ClientHelloPacket::class)
     incomingPacket(0x01u, ServerHelloPacketDeserializer())
-    outgoingPacket(0x02u, ClientReadyPacket::class, ClientReadyPacketSerializer())
+    outgoingPacket(0x02u, ClientReadyPacketSerializer(), ClientReadyPacket::class)
   }
 }

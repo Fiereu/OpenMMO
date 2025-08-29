@@ -3,6 +3,7 @@ package de.fiereu.openmmo.protocols
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.buffer.ByteBuf
 import kotlin.reflect.KClass
+import kotlin.reflect.jvm.jvmErasure
 
 /** Value class wrapping a UByte to represent an opcode. */
 @JvmInline
@@ -49,9 +50,7 @@ abstract class Protocol {
 
   abstract val async: Boolean
 
-  fun getOpcode(dataClass: KClass<*>): Opcode? {
-    return dataClassToOpcode[dataClass]
-  }
+  fun getOpcode(dataClass: KClass<*>): Opcode? = dataClassToOpcode[dataClass]
 
   fun <T : Any> registerIncoming(opcode: Opcode, deserializer: PacketDeserializer<T>) {
     log.debug {
@@ -63,13 +62,17 @@ abstract class Protocol {
 
   fun <T : Any> registerOutgoing(
       opcode: Opcode,
-      dataClass: KClass<T>,
       serializer: PacketSerializer<T>,
+      dataClass: KClass<T>,
   ) {
     log.debug {
       "Registering outgoing packet: opcode=$opcode, serializer=${serializer::class.simpleName}"
     }
 
+    if (dataClassToOpcode.containsKey(dataClass)) {
+      // Better to fail fast here than to have hard to debug issues later
+      error("Data class ${dataClass.simpleName} is already registered with an opcode!")
+    }
     dataClassToOpcode[dataClass] = opcode
     outgoingPacketRegistry.put(opcode, serializer)
   }
@@ -93,8 +96,8 @@ fun <T : Any> Protocol.incomingPacket(opcode: UByte, deserializer: PacketDeseria
 
 fun <T : Any> Protocol.outgoingPacket(
     opcode: UByte,
-    dataClass: KClass<T>,
-    serializer: PacketSerializer<T>
+    serializer: PacketSerializer<T>,
+    dataClass: KClass<T>
 ) {
-  this.registerOutgoing(Opcode(opcode), dataClass, serializer)
+  this.registerOutgoing(Opcode(opcode), serializer, dataClass)
 }
