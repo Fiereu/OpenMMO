@@ -11,7 +11,7 @@ services:
       - $LOGIN_DB_PORT:5432
   game-db:
     image: postgres:latest
-    container_name: login-db
+    container_name: game-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: $GAME_DB_NAME
