@@ -3,10 +3,10 @@ package de.fiereu.openmmo.protocols.tls.packets
 import com.github.maltalex.ineter.base.IPv4Address
 import de.fiereu.openmmo.protocols.PacketDeserializer
 import de.fiereu.openmmo.protocols.PacketSerializer
-import de.fiereu.openmmo.protocols.readUtf16LE
-import de.fiereu.openmmo.protocols.writeUtf16LE
-import de.fiereu.openmmo.protocols.writeIpRangeLE
 import de.fiereu.openmmo.protocols.readIpRangeLE
+import de.fiereu.openmmo.protocols.readUtf16LE
+import de.fiereu.openmmo.protocols.writeIpRangeLE
+import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
 // TODO needs proper investigation and implementation
@@ -17,9 +17,7 @@ enum class KickReason {
   C
 }
 
-data class LoginKickPacket(
-  val reason: KickReason?
-)
+data class LoginKickPacket(val reason: KickReason?)
 
 class LoginKickPacketSerializer : PacketSerializer<LoginKickPacket> {
   override fun serialize(packet: LoginKickPacket, buffer: ByteBuf) {
@@ -68,8 +66,9 @@ class LoginKickPacketDeserializer : PacketDeserializer<LoginKickPacket> {
     }
 
     val reasonOrdinal = buffer.readUnsignedByte().toInt()
-    val reason = KickReason.entries.getOrNull(reasonOrdinal)
-      ?: throw IllegalArgumentException("Unknown kick reason: $reasonOrdinal")
+    val reason =
+        KickReason.entries.getOrNull(reasonOrdinal)
+            ?: throw IllegalArgumentException("Unknown kick reason: $reasonOrdinal")
 
     when (reason) {
       KickReason.A -> {

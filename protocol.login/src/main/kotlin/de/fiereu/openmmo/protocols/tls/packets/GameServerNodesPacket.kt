@@ -13,32 +13,31 @@ import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
 /**
- * Nodes are address entries for game servers that the client can connect to.
- * The nodes are selected by a weighted random algorithm on the client side.
- * The weight is a value between 0 and 255, where 0 means the node
- * will never be selected and 255 means the node will always be selected.
+ * Nodes are address entries for game servers that the client can connect to. The nodes are selected
+ * by a weighted random algorithm on the client side. The weight is a value between 0 and 255, where
+ * 0 means the node will never be selected and 255 means the node will always be selected.
  * Typically, nodes are assigned weights based on their capacity or priority.
  */
 data class GameServerNode(
-  val iPv4Address: IPv4Address,
-  val iPv6Address: IPv6Address,
-  val port: UShort = 7777u,
-  val weight: UByte
+    val iPv4Address: IPv4Address,
+    val iPv6Address: IPv6Address,
+    val port: UShort = 7777u,
+    val weight: UByte
 )
 
 data class GameServerData(
-  val gameServerId: UByte,
-  val userId: Int,
-  val sessionToken: ByteArray,
-  val localAddress: IPAddress,
-  val localHostname: String,
-  val port: UShort,
+    val gameServerId: UByte,
+    val userId: Int,
+    val sessionToken: ByteArray,
+    val localAddress: IPAddress,
+    val localHostname: String,
+    val port: UShort,
 )
 
 data class GameServerNodesPacket(
-  val loginState: LoginState,
-  val gameServerData: GameServerData? = null,
-  val nodes: List<GameServerNode> = emptyList()
+    val loginState: LoginState,
+    val gameServerData: GameServerData? = null,
+    val nodes: List<GameServerNode> = emptyList()
 )
 
 class GameServerNodesPacketSerializer : PacketSerializer<GameServerNodesPacket> {
@@ -48,7 +47,8 @@ class GameServerNodesPacketSerializer : PacketSerializer<GameServerNodesPacket> 
       return
     }
 
-    val gsd = requireNotNull(packet.gameServerData) { "GameServerData must be provided for AUTHED state" }
+    val gsd =
+        requireNotNull(packet.gameServerData) { "GameServerData must be provided for AUTHED state" }
 
     buffer.writeIntLE(gsd.userId)
     buffer.writeByte(gsd.sessionToken.size)
@@ -115,17 +115,8 @@ class GameServerNodesPacketDeserializer : PacketDeserializer<GameServerNodesPack
     }
 
     return GameServerNodesPacket(
-      LoginState.AUTHED,
-      GameServerData(
-        gameServerId,
-        userId,
-        sessionToken,
-        localAddress,
-        localHostname,
-        port
-      ),
-      nodes
-    )
+        LoginState.AUTHED,
+        GameServerData(gameServerId, userId, sessionToken, localAddress, localHostname, port),
+        nodes)
   }
 }
-

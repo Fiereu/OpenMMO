@@ -8,7 +8,8 @@ enum class Arch {
 
   companion object {
     fun from(ordinal: Int): Arch {
-      return entries.firstOrNull { it.ordinal == ordinal } ?: throw IllegalArgumentException("Unknown arch: $ordinal")
+      return entries.firstOrNull { it.ordinal == ordinal }
+          ?: throw IllegalArgumentException("Unknown arch: $ordinal")
     }
   }
 }

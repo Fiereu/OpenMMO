@@ -4,9 +4,7 @@ import de.fiereu.openmmo.protocols.PacketDeserializer
 import de.fiereu.openmmo.protocols.PacketSerializer
 import io.netty.buffer.ByteBuf
 
-data class JoinGameServerPacket(
-  val gameServerId: UByte
-)
+data class JoinGameServerPacket(val gameServerId: UByte)
 
 class JoinGameServerPacketSerializer : PacketSerializer<JoinGameServerPacket> {
   override fun serialize(packet: JoinGameServerPacket, buffer: ByteBuf) {

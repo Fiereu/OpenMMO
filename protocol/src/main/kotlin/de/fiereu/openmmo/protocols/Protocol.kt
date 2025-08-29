@@ -3,7 +3,6 @@ package de.fiereu.openmmo.protocols
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.buffer.ByteBuf
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.jvmErasure
 
 /** Value class wrapping a UByte to represent an opcode. */
 @JvmInline

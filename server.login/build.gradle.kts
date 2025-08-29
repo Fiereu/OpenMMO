@@ -123,10 +123,9 @@ tasks.register("cleanMigrateAndGenerate") {
 spotless { kotlin { targetExclude("src/main/jooq/**") } }
 
 // If someone knows a better way then this please please please help me :(
-listOf("classes", "processResources", "spotlessKotlin", "spotlessKotlinGradle", "spotlessMisc").forEach { taskName ->
-  tasks.named(taskName) {
-    listOf("copyPublicKeyGame", "copyPrivateKeyGame")
-      .forEach { dependsOn(it) }
-  }
-}
-
+listOf("classes", "processResources", "spotlessKotlin", "spotlessKotlinGradle", "spotlessMisc")
+    .forEach { taskName ->
+      tasks.named(taskName) {
+        listOf("copyPublicKeyGame", "copyPrivateKeyGame").forEach { dependsOn(it) }
+      }
+    }

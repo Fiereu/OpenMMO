@@ -4,16 +4,16 @@ import com.github.maltalex.ineter.base.IPv4Address
 import com.github.maltalex.ineter.base.IPv6Address
 import de.fiereu.openmmo.protocols.PacketDeserializer
 import de.fiereu.openmmo.protocols.PacketSerializer
-import de.fiereu.openmmo.protocols.readUtf16LE
-import de.fiereu.openmmo.protocols.writeUtf16LE
-import de.fiereu.openmmo.protocols.writeIpLE
 import de.fiereu.openmmo.protocols.readIpLE
+import de.fiereu.openmmo.protocols.readUtf16LE
+import de.fiereu.openmmo.protocols.writeIpLE
+import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
 data class ExistingSessionPacket(
-  val sessionId: Long,
-  val sessionKey: ByteArray,
-  val serverName: String
+    val sessionId: Long,
+    val sessionKey: ByteArray,
+    val serverName: String
 ) {
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
@@ -76,10 +76,10 @@ class SentExistingSessionPacketDeserializer : PacketDeserializer<ExistingSession
 
     buffer.readByte()
     val serverName = buffer.readUtf16LE()
-    
+
     val unk = ByteArray(buffer.readByte().toInt())
     buffer.readBytes(unk)
-    
+
     buffer.readUtf16LE()
 
     buffer.readIntLE()

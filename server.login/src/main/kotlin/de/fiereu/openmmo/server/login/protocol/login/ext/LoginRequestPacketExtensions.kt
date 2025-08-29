@@ -12,8 +12,8 @@ fun PacketEvent<LoginRequestPacket>.respondWithState(state: LoginState) {
 }
 
 fun PacketEvent<LoginRequestPacket>.respondWithRateLimit(
-  state: LoginState,
-  ratelimitEnd: LocalDateTime
+    state: LoginState,
+    ratelimitEnd: LocalDateTime
 ) {
   this.respond(LoginResponsePacketBuilder.withRateLimit(state, ratelimitEnd))
 }

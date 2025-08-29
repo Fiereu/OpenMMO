@@ -7,16 +7,14 @@ import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
 data class GameServer(
-  val id: UByte,
-  val name: String,
-  val currentPlayers: UShort = 0u,
-  val maxPlayers: UShort = 0u,
-  val joinable: Boolean
+    val id: UByte,
+    val name: String,
+    val currentPlayers: UShort = 0u,
+    val maxPlayers: UShort = 0u,
+    val joinable: Boolean
 )
 
-data class GameServerListPacket(
-  val gameServers: List<GameServer>
-)
+data class GameServerListPacket(val gameServers: List<GameServer>)
 
 class GameServerListPacketSerializer : PacketSerializer<GameServerListPacket> {
   override fun serialize(packet: GameServerListPacket, buffer: ByteBuf) {
@@ -46,7 +44,7 @@ class GameServerListPacketSerializer : PacketSerializer<GameServerListPacket> {
 class GameServerListPacketDeserializer : PacketDeserializer<GameServerListPacket> {
   override fun deserialize(buffer: ByteBuf): GameServerListPacket {
     val serverCount = buffer.readUnsignedByte().toInt()
-    
+
     if (serverCount == 0) {
       buffer.readByte() // skip first server id (0)
       buffer.readByte() // skip second byte (0)

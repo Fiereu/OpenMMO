@@ -12,14 +12,11 @@ fun PacketEvent<JoinGameServerPacket>.respondWithErrorState(state: LoginState) {
 }
 
 fun PacketEvent<JoinGameServerPacket>.respondForAuthedUser(
-  userId: Int,
-  sessionToken: ByteArray
+    userId: Int,
+    sessionToken: ByteArray
 ): AuthedPacketBuilder {
   return GameServerNodesPacketBuilder.forAuthedUser(
-    userId = userId,
-    sessionToken = sessionToken,
-    gameServerId = this.packet.gameServerId
-  )
+      userId = userId, sessionToken = sessionToken, gameServerId = this.packet.gameServerId)
 }
 
 fun AuthedPacketBuilder.respondTo(event: PacketEvent<*>) {

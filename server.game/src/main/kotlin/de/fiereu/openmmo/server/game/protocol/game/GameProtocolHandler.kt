@@ -32,7 +32,9 @@ class GameProtocolHandler(
 
   fun onJoinGame(event: PacketEvent<JoinGamePacket>) {
     log.info { "Player joined the game." }
-    log.debug { "This is what the Game knows about you:\n${event.packet.clientInfo.values.joinToString("\n")}" }
+    log.debug {
+      "This is what the Game knows about you:\n${event.packet.clientInfo.values.joinToString("\n")}"
+    }
     // TODO handle player joining the game
   }
 }

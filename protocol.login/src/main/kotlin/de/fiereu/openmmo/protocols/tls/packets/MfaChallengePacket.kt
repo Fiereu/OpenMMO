@@ -6,10 +6,7 @@ import de.fiereu.openmmo.protocols.readUtf16LE
 import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
-data class MfaChallengePacket(
-  val unk: Byte,
-  val email: String
-)
+data class MfaChallengePacket(val unk: Byte, val email: String)
 
 class MfaChallengePacketSerializer : PacketSerializer<MfaChallengePacket> {
   override fun serialize(packet: MfaChallengePacket, buffer: ByteBuf) {

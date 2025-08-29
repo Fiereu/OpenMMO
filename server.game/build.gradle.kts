@@ -30,13 +30,12 @@ dependencies {
 
 application { mainClass.set("de.fiereu.openmmo.server.game.GameServerKt") }
 
-
 fun env(key: String): Any {
   val value =
-    property(key)
-      ?: System.getenv(key)
-      ?: throw IllegalArgumentException(
-        "Environment variable or system property '$key' is not set.")
+      property(key)
+          ?: System.getenv(key)
+          ?: throw IllegalArgumentException(
+              "Environment variable or system property '$key' is not set.")
   fun interpolate(value: String): Any {
     val PATTERN_WORD = Regex("\\$([a-zA-Z0-9_]+)")
     val PATTERN_MULTI = Regex("\\$\\{([a-zA-Z0-9_]+)\\}")
@@ -47,7 +46,7 @@ fun env(key: String): Any {
       val envValue = System.getProperty(envName) ?: System.getProperty(envName)
       if (envValue == null) {
         throw IllegalArgumentException(
-          "Environment variable or system property '$envName' is not set.")
+            "Environment variable or system property '$envName' is not set.")
       }
       acc.replace(match.value, envValue)
     }
@@ -75,7 +74,7 @@ jooq {
         name = "org.jooq.meta.postgres.PostgresDatabase"
         includes = ".*"
         excludes =
-          """
+            """
           flyway_schema_history |
           pgp_armor_headers
         """
@@ -116,9 +115,9 @@ tasks.register("cleanMigrateAndGenerate") {
 spotless { kotlin { targetExclude("src/main/jooq/**") } }
 
 // If someone knows a better way then this please please please help me :(
-listOf("classes", "processResources", "spotlessKotlin", "spotlessKotlinGradle", "spotlessMisc").forEach { taskName ->
-  tasks.named(taskName) {
-    listOf("copyPublicKeyGame", "copyPrivateKeyGame")
-      .forEach { dependsOn(it) }
-  }
-}
+listOf("classes", "processResources", "spotlessKotlin", "spotlessKotlinGradle", "spotlessMisc")
+    .forEach { taskName ->
+      tasks.named(taskName) {
+        listOf("copyPublicKeyGame", "copyPrivateKeyGame").forEach { dependsOn(it) }
+      }
+    }

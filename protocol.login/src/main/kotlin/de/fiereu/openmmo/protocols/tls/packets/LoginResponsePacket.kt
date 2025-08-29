@@ -8,10 +8,7 @@ import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 import java.time.LocalDateTime
 
-data class LoginResponsePacket(
-  val state: LoginState,
-  val ratelimitEnd: LocalDateTime?
-) {
+data class LoginResponsePacket(val state: LoginState, val ratelimitEnd: LocalDateTime?) {
   constructor(state: LoginState) : this(state, null)
 }
 
@@ -19,8 +16,10 @@ class LoginResponsePacketSerializer : PacketSerializer<LoginResponsePacket> {
   override fun serialize(packet: LoginResponsePacket, buffer: ByteBuf) {
     buffer.writeByte(packet.state.id)
     if (packet.state == LoginState.RATE_LIMITED || packet.state == LoginState.RATE_LIMITED_2FA) {
-      val epochSeconds = packet.ratelimitEnd?.toEpochSecond(java.time.ZoneOffset.UTC)
-        ?: throw IllegalArgumentException("ratelimitEnd must be provided for RATE_LIMITED states")
+      val epochSeconds =
+          packet.ratelimitEnd?.toEpochSecond(java.time.ZoneOffset.UTC)
+              ?: throw IllegalArgumentException(
+                  "ratelimitEnd must be provided for RATE_LIMITED states")
       buffer.writeLongLE(epochSeconds)
     }
     if (packet.state == LoginState.AUTHED) {

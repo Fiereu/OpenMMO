@@ -7,7 +7,8 @@ enum class Bitness {
 
   companion object {
     fun from(ordinal: Int): Bitness {
-      return entries.firstOrNull { it.ordinal == ordinal } ?: throw IllegalArgumentException("Unknown bitness: $ordinal")
+      return entries.firstOrNull { it.ordinal == ordinal }
+          ?: throw IllegalArgumentException("Unknown bitness: $ordinal")
     }
   }
 }
