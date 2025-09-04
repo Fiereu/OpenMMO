@@ -48,6 +48,7 @@ abstract class Protocol {
   private val dataClassToOpcode: MutableMap<KClass<*>, Opcode> = mutableMapOf()
 
   abstract val async: Boolean
+  abstract val compressed: Boolean
 
   fun getOpcode(dataClass: KClass<*>): Opcode? = dataClassToOpcode[dataClass]
 

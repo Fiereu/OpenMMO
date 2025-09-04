@@ -4,6 +4,9 @@ import de.fiereu.openmmo.protocols.Protocol
 import de.fiereu.openmmo.protocols.game.packets.JoinGamePacket
 import de.fiereu.openmmo.protocols.game.packets.JoinPacketDeserializer
 import de.fiereu.openmmo.protocols.game.packets.JoinPacketSerializer
+import de.fiereu.openmmo.protocols.game.packets.JoinResponsePacket
+import de.fiereu.openmmo.protocols.game.packets.JoinResponsePacketDeserializer
+import de.fiereu.openmmo.protocols.game.packets.JoinResponsePacketSerializer
 import de.fiereu.openmmo.protocols.incomingPacket
 import de.fiereu.openmmo.protocols.outgoingPacket
 
@@ -14,16 +17,20 @@ import de.fiereu.openmmo.protocols.outgoingPacket
 abstract class GameProtocol : Protocol() {
   override val async: Boolean
     get() = true
+  override val compressed: Boolean
+    get() = true
 }
 
 class GameServerProtocol : GameProtocol() {
   init {
     incomingPacket(0x01u, JoinPacketDeserializer())
+    outgoingPacket(0x01u, JoinResponsePacketSerializer(), JoinResponsePacket::class)
   }
 }
 
 class GameClientProtocol : GameProtocol() {
   init {
     outgoingPacket(0x01u, JoinPacketSerializer(), JoinGamePacket::class)
+    incomingPacket(0x01u, JoinResponsePacketDeserializer())
   }
 }

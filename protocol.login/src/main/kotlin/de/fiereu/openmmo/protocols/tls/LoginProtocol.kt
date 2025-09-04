@@ -50,6 +50,8 @@ import de.fiereu.openmmo.protocols.tls.packets.ToSPacketSerializer
 abstract class LoginProtocol() : Protocol() {
   override val async: Boolean
     get() = true
+  override val compressed: Boolean
+    get() = false
 }
 
 class LoginServerProtocol() : LoginProtocol() {

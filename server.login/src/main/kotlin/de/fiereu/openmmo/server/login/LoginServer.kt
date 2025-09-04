@@ -23,7 +23,7 @@ fun main() {
           .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
           .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
           .withChannelHandlerProvider {
-            LoginProtocolHandler(LoginServerProtocol(), coroutineScope)
+            LoginProtocolHandler(LoginServerProtocol(), serverConfig,  coroutineScope)
           }
           .build()
   server.start()

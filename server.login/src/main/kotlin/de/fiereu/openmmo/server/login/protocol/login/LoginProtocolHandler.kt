@@ -10,6 +10,7 @@ import de.fiereu.openmmo.protocols.tls.packets.GameServerNode
 import de.fiereu.openmmo.protocols.tls.packets.JoinGameServerPacket
 import de.fiereu.openmmo.protocols.tls.packets.LoginRequestPacket
 import de.fiereu.openmmo.protocols.tls.packets.RequestGameServerListPacket
+import de.fiereu.openmmo.server.config.ServerConfig
 import de.fiereu.openmmo.server.login.protocol.login.ext.respondForAuthedUser
 import de.fiereu.openmmo.server.login.protocol.login.ext.respondTo
 import de.fiereu.openmmo.server.login.protocol.login.ext.respondWithServers
@@ -25,8 +26,9 @@ private val log = KotlinLogging.logger {}
 
 class LoginProtocolHandler(
     protocol: Protocol,
+    serverConfig: ServerConfig,
     private val coroutineScope: CoroutineScope,
-) : ProtocolHandler(protocol) {
+) : ProtocolHandler(protocol, serverConfig) {
 
   override fun onActive(ctx: ChannelHandlerContext) {
     log.info { "Client ${ctx.channel().remoteAddress()} swapped to login protocol." }

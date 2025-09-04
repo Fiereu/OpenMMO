@@ -22,7 +22,7 @@ fun main() {
           .withTlsConfig(tlsConfig)
           .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
           .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
-          .withChannelHandlerProvider { GameProtocolHandler(GameServerProtocol(), coroutineScope) }
+          .withChannelHandlerProvider { GameProtocolHandler(GameServerProtocol(), serverConfig, coroutineScope) }
           .build()
   server.start()
 }

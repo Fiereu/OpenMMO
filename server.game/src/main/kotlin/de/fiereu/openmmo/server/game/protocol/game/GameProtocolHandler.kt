@@ -2,6 +2,9 @@ package de.fiereu.openmmo.server.game.protocol.game
 
 import de.fiereu.openmmo.protocols.Protocol
 import de.fiereu.openmmo.protocols.game.packets.JoinGamePacket
+import de.fiereu.openmmo.server.config.ServerConfig
+import de.fiereu.openmmo.server.game.protocol.game.ext.accept
+import de.fiereu.openmmo.server.game.protocol.game.ext.buildAndRespond
 import de.fiereu.openmmo.server.netty.handlers.ProtocolHandler
 import de.fiereu.openmmo.server.protocol.PacketEvent
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -12,9 +15,10 @@ import kotlinx.coroutines.launch
 private val log = KotlinLogging.logger {}
 
 class GameProtocolHandler(
-    protocol: Protocol,
-    private val coroutineScope: CoroutineScope,
-) : ProtocolHandler(protocol) {
+  protocol: Protocol,
+  serverConfig: ServerConfig,
+  private val coroutineScope: CoroutineScope,
+) : ProtocolHandler(protocol, serverConfig) {
 
   override fun onActive(ctx: ChannelHandlerContext) {
     log.info { "Client ${ctx.channel().remoteAddress()} connected to game server." }
@@ -35,6 +39,12 @@ class GameProtocolHandler(
     log.debug {
       "This is what the Game knows about you:\n${event.packet.clientInfo.values.joinToString("\n")}"
     }
-    // TODO handle player joining the game
+    // TODO handle player joining the game e.g. authentication
+
+    event.accept()
+      .withPlaytime(1337)
+      .withRewardPoints(420)
+      .withBalance(187)
+      .buildAndRespond(event)
   }
 }

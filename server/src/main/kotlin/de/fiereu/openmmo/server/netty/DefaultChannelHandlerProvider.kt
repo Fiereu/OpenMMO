@@ -52,7 +52,7 @@ class DefaultChannelHandlerProvider(
     pipeline.addLast("tls-encryption", TlsEncryptionHandler(tlsContext))
 
     pipeline.addLast("protocol-logger", LoggingHandler("protocol-logger", LogLevel.TRACE))
-    pipeline.addLast("protocol", TlsProtocolHandler(tlsProtocol, tlsConfig, this))
+    pipeline.addLast("protocol", TlsProtocolHandler(tlsProtocol, serverConfig, tlsConfig, this))
   }
 
   /**

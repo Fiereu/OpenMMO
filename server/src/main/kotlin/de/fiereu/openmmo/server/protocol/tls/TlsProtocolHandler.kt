@@ -4,6 +4,7 @@ import de.fiereu.openmmo.protocols.Protocol
 import de.fiereu.openmmo.protocols.tls.packets.ClientHelloPacket
 import de.fiereu.openmmo.protocols.tls.packets.ClientReadyPacket
 import de.fiereu.openmmo.protocols.tls.packets.ServerHelloPacket
+import de.fiereu.openmmo.server.config.ServerConfig
 import de.fiereu.openmmo.server.config.TlsConfig
 import de.fiereu.openmmo.server.netty.DefaultChannelHandlerProvider
 import de.fiereu.openmmo.server.netty.handlers.ProtocolHandler
@@ -23,9 +24,10 @@ private val log = KotlinLogging.logger {}
 
 class TlsProtocolHandler(
   protocol: Protocol,
+  serverConfig: ServerConfig,
   private val tlsConfig: TlsConfig,
   private val channelHandlerProvider: DefaultChannelHandlerProvider
-) : ProtocolHandler(protocol) {
+) : ProtocolHandler(protocol, serverConfig) {
 
   private val packetBuffer: MutableList<ByteBuf> = mutableListOf()
   private val connectionKeyPair: Pair<ECPublicKey, ECPrivateKey>

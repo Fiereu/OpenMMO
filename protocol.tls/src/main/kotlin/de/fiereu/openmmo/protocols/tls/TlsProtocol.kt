@@ -24,6 +24,8 @@ import java.security.interfaces.ECPublicKey
 abstract class TlsProtocol() : Protocol() {
   override val async: Boolean
     get() = false
+  override val compressed: Boolean
+    get() = false
 }
 
 class TlsServerProtocol(serverKeyPair: Pair<ECPrivateKey, ECPublicKey>) : TlsProtocol() {
