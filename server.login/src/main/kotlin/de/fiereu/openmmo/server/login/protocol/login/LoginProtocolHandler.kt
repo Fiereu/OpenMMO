@@ -13,6 +13,7 @@ import de.fiereu.openmmo.server.login.protocol.login.ext.respondWithState
 import de.fiereu.openmmo.server.login.services.UserAuthenticationService
 import de.fiereu.openmmo.server.netty.handlers.ProtocolHandler
 import de.fiereu.openmmo.server.protocol.PacketEvent
+import de.fiereu.openmmo.server.protocol.respond
 import io.github.oshai.kotlinlogging.KotlinLogging
 import io.netty.channel.ChannelHandlerContext
 import kotlinx.coroutines.CoroutineScope
@@ -46,17 +47,25 @@ class LoginProtocolHandler(
 
   fun onLoginRequest(event: PacketEvent<LoginRequestPacket>) {
     log.info { "Received login request for user '${event.packet.username}'" }
-    when (event.packet.method) {
-      is LoginMethod.Password -> {
-        val loginMethod = event.packet.method as LoginMethod.Password
-        if (userAuthenticationService.loginPassword(event.packet.username, loginMethod.password)) {
-          event.respondWithState(LoginState.AUTHED)
-        } else {
-          event.respondWithState(LoginState.INVALID_PASSWORD)
-        }
-        return
+    val loginMethod = event.packet.method
+    val loggedIn = when (loginMethod) {
+      is LoginMethod.Password -> userAuthenticationService.loginPassword(event.packet.username, loginMethod.password)
+      is LoginMethod.Token -> userAuthenticationService.loginToken(event.packet.username, loginMethod.token)
+    }
+
+    if (!loggedIn) {
+      event.respondWithState(LoginState.INVALID_PASSWORD)
+      return
+    }
+
+    if (loginMethod is LoginMethod.Password && loginMethod.stayLoggedIn) {
+      val tokenResult = userAuthenticationService.createToken(event.packet.username)
+      if (tokenResult.isFailure) {
+        log.error(tokenResult.exceptionOrNull()) { "Failed to create token for user ${event.packet.username}." }
+      } else {
+        val token = tokenResult.getOrThrow()
+        event.respond(SentCredentialsPacket(event.packet.username, token.token))
       }
-      is LoginMethod.Token -> TODO()
     }
   }
 

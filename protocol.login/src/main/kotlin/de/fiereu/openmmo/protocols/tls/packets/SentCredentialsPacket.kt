@@ -12,20 +12,20 @@ import java.util.Base64
  * used so no password is stored on the User PC and the Client can automatically log in the user
  * without asking for a password.
  */
-data class SentCredentialsPacket(val username: String, val key: String) {
+data class SentCredentialsPacket(val username: String, val token: String) {
   /**
-   * Constructor for when a key is provided.
+   * Constructor for when a Login-Token is provided.
    *
    * @param username the username of the user whose credentials we want to send.
-   * @param keyBytes the key for the user as a byte array.
+   * @param token the Login-Token for the user as a byte array.
    */
   constructor(
-      username: String,
-      keyBytes: ByteArray?
-  ) : this(username, keyBytes?.let { Base64.getEncoder().encodeToString(it) } ?: "")
+    username: String,
+    token: ByteArray?
+  ) : this(username, token?.let { Base64.getEncoder().encodeToString(it) } ?: "")
 
   /**
-   * Constructor for when no key is provided. The Client will remove the credentials for this user
+   * Constructor for when no Login-Token is provided. The Client will remove the credentials for this user
    * from its credential list.
    *
    * @param username the username of the user whose credentials we want to remove.
@@ -36,14 +36,14 @@ data class SentCredentialsPacket(val username: String, val key: String) {
 class SentCredentialsPacketSerializer : PacketSerializer<SentCredentialsPacket> {
   override fun serialize(packet: SentCredentialsPacket, buffer: ByteBuf) {
     buffer.writeUtf16LE(packet.username)
-    buffer.writeUtf16LE(packet.key)
+    buffer.writeUtf16LE(packet.token)
   }
 }
 
 class SentCredentialsPacketDeserializer : PacketDeserializer<SentCredentialsPacket> {
   override fun deserialize(buffer: ByteBuf): SentCredentialsPacket {
     val username = buffer.readUtf16LE()
-    val key = buffer.readUtf16LE()
-    return SentCredentialsPacket(username, key)
+    val token = buffer.readUtf16LE()
+    return SentCredentialsPacket(username, token)
   }
 }

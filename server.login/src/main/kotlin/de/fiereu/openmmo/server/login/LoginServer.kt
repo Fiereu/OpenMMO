@@ -8,6 +8,7 @@ import de.fiereu.openmmo.server.io.resource
 import de.fiereu.openmmo.server.keys.KeyLoader
 import de.fiereu.openmmo.server.login.protocol.login.LoginProtocolHandler
 import de.fiereu.openmmo.server.login.repositories.UserRepository
+import de.fiereu.openmmo.server.login.repositories.UserTokenRepository
 import de.fiereu.openmmo.server.login.services.UserAuthenticationService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,8 @@ fun main() {
   )
 
   val userRepository = UserRepository(databaseCtx)
-  val userAuthenticationService = UserAuthenticationService(userRepository)
+  val userTokenRepository = UserTokenRepository(databaseCtx)
+  val userAuthenticationService = UserAuthenticationService(userRepository, userTokenRepository)
 
   val server =
     ServerBuilder.create()

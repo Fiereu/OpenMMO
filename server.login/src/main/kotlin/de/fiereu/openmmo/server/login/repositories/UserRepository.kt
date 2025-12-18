@@ -16,7 +16,7 @@ class UserRepository(
    * Gets a given User.
    *
    * @param username The Username to look up.
-   * @return Returns an [Optional] with the given [UserRecord] if found, otherwise its Empty.
+   * @return Returns an [Optional] with the given [UserRecord] if found, otherwise its empty.
    */
   fun getUser(username: String): Optional<UserRecord> = ctx
     .selectFrom(USER)
