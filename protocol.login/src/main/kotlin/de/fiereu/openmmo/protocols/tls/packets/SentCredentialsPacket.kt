@@ -20,13 +20,13 @@ data class SentCredentialsPacket(val username: String, val token: String) {
    * @param token the Login-Token for the user as a byte array.
    */
   constructor(
-    username: String,
-    token: ByteArray?
+      username: String,
+      token: ByteArray?
   ) : this(username, token?.let { Base64.getEncoder().encodeToString(it) } ?: "")
 
   /**
-   * Constructor for when no Login-Token is provided. The Client will remove the credentials for this user
-   * from its credential list.
+   * Constructor for when no Login-Token is provided. The Client will remove the credentials for
+   * this user from its credential list.
    *
    * @param username the username of the user whose credentials we want to remove.
    */

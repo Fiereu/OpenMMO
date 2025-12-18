@@ -20,9 +20,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class LoginProtocolHandler(
-  protocol: Protocol,
-  private val coroutineScope: CoroutineScope,
-  private val userAuthenticationService: UserAuthenticationService
+    protocol: Protocol,
+    private val coroutineScope: CoroutineScope,
+    private val userAuthenticationService: UserAuthenticationService
 ) : ProtocolHandler(protocol) {
 
   private val log = KotlinLogging.logger {}
@@ -37,7 +37,7 @@ class LoginProtocolHandler(
       when (event.packet) {
         is LoginRequestPacket -> onLoginRequest(event as PacketEvent<LoginRequestPacket>)
         is RequestGameServerListPacket ->
-          onGameServerListRequest(event as PacketEvent<RequestGameServerListPacket>)
+            onGameServerListRequest(event as PacketEvent<RequestGameServerListPacket>)
 
         is JoinGameServerPacket -> onServerSelection(event as PacketEvent<JoinGameServerPacket>)
         else -> log.warn { "Unhandled login packet type: ${event.packet::class.simpleName}" }
@@ -48,10 +48,13 @@ class LoginProtocolHandler(
   fun onLoginRequest(event: PacketEvent<LoginRequestPacket>) {
     log.info { "Received login request for user '${event.packet.username}'" }
     val loginMethod = event.packet.method
-    val loggedIn = when (loginMethod) {
-      is LoginMethod.Password -> userAuthenticationService.loginPassword(event.packet.username, loginMethod.password)
-      is LoginMethod.Token -> userAuthenticationService.loginToken(event.packet.username, loginMethod.token)
-    }
+    val loggedIn =
+        when (loginMethod) {
+          is LoginMethod.Password ->
+              userAuthenticationService.loginPassword(event.packet.username, loginMethod.password)
+          is LoginMethod.Token ->
+              userAuthenticationService.loginToken(event.packet.username, loginMethod.token)
+        }
 
     if (!loggedIn) {
       event.respondWithState(LoginState.INVALID_PASSWORD)
@@ -61,7 +64,9 @@ class LoginProtocolHandler(
     if (loginMethod is LoginMethod.Password && loginMethod.stayLoggedIn) {
       val tokenResult = userAuthenticationService.createToken(event.packet.username)
       if (tokenResult.isFailure) {
-        log.error(tokenResult.exceptionOrNull()) { "Failed to create token for user ${event.packet.username}." }
+        log.error(tokenResult.exceptionOrNull()) {
+          "Failed to create token for user ${event.packet.username}."
+        }
       } else {
         val token = tokenResult.getOrThrow()
         event.respond(SentCredentialsPacket(event.packet.username, token.token))
@@ -81,21 +86,18 @@ class LoginProtocolHandler(
     // implementation)
     // Example refuse connection: event.respondWithState(LoginState.INVALID_PASSWORD)
     event
-      .respondForAuthedUser(userId = 1, sessionToken = ByteArray(16) { 0x42 })
-      .withLocalEndpoint(
-        address = IPAddress.of("127.0.0.1"), hostname = "localhost", port = 7777u
-      )
-      .withNodes(
-        listOf(
-          GameServerNode(
-            iPv4Address = IPv4Address.of("127.0.0.1"),
-            iPv6Address = IPv6Address.of("::1"),
-            port = 7777u,
-            weight =
-              0x01u // Always select this node (only one node available in this example)
-          )
-        )
-      )
-      .respondTo(event)
+        .respondForAuthedUser(userId = 1, sessionToken = ByteArray(16) { 0x42 })
+        .withLocalEndpoint(
+            address = IPAddress.of("127.0.0.1"), hostname = "localhost", port = 7777u)
+        .withNodes(
+            listOf(
+                GameServerNode(
+                    iPv4Address = IPv4Address.of("127.0.0.1"),
+                    iPv6Address = IPv6Address.of("::1"),
+                    port = 7777u,
+                    weight =
+                        0x01u // Always select this node (only one node available in this example)
+                    )))
+        .respondTo(event)
   }
 }

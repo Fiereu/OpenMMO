@@ -20,12 +20,14 @@ data class LoginRequestPacket(
 )
 
 sealed interface LoginMethod {
-    companion object {
-        const val TYPE_PASSWORD = 0x00
-        const val TYPE_TOKEN    = 0x01
-    }
-    data class Password(val password: String, val stayLoggedIn: Boolean) : LoginMethod
-    data class Token(val token: ByteArray) : LoginMethod
+  companion object {
+    const val TYPE_PASSWORD = 0x00
+    const val TYPE_TOKEN = 0x01
+  }
+
+  data class Password(val password: String, val stayLoggedIn: Boolean) : LoginMethod
+
+  data class Token(val token: ByteArray) : LoginMethod
 }
 
 class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
@@ -72,14 +74,14 @@ class LoginRequestPacketDeserializer : PacketDeserializer<LoginRequestPacket> {
           LoginMethod.TYPE_PASSWORD -> {
             val password = buffer.readUtf16LE()
             val stayLoggedIn = buffer.readBoolean()
-              LoginMethod.Password(password, stayLoggedIn)
+            LoginMethod.Password(password, stayLoggedIn)
           }
 
           LoginMethod.TYPE_TOKEN -> {
             val tokenSize = buffer.readUnsignedByte().toInt()
             val token = ByteArray(tokenSize)
             buffer.readBytes(token)
-              LoginMethod.Token(token)
+            LoginMethod.Token(token)
           }
 
           else -> throw IllegalArgumentException("Unknown login method type: $methodType")

@@ -39,13 +39,7 @@ dependencies {
 
 application { mainClass.set("de.fiereu.openmmo.server.login.LoginServerKt") }
 
-sourceSets {
-  main {
-    java {
-      srcDir("src/main/jooq")
-    }
-  }
-}
+sourceSets { main { java { srcDir("src/main/jooq") } } }
 
 fun env(key: String): Any {
   val value =

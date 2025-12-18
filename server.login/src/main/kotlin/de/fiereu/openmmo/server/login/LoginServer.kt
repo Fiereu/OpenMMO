@@ -24,30 +24,22 @@ fun main() {
   val databaseUser = "openmmo_login_user"
   val databasePassword = "changeMe!"
 
-  val databaseCtx = DSL.using(
-    databaseUrl,
-    databaseUser,
-    databasePassword
-  )
+  val databaseCtx = DSL.using(databaseUrl, databaseUser, databasePassword)
 
   val userRepository = UserRepository(databaseCtx)
   val userTokenRepository = UserTokenRepository(databaseCtx)
   val userAuthenticationService = UserAuthenticationService(userRepository, userTokenRepository)
 
   val server =
-    ServerBuilder.create()
-      .withCoroutineScope(coroutineScope)
-      .withConfig(serverConfig)
-      .withTlsConfig(tlsConfig)
-      .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
-      .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
-      .withChannelHandlerProvider {
-        LoginProtocolHandler(
-          LoginServerProtocol(),
-          coroutineScope,
-          userAuthenticationService
-        )
-      }
-      .build()
+      ServerBuilder.create()
+          .withCoroutineScope(coroutineScope)
+          .withConfig(serverConfig)
+          .withTlsConfig(tlsConfig)
+          .withPublicKey(KeyLoader.loadPemECPublicKey(resource("game.public.pem")))
+          .withPrivateKey(KeyLoader.loadPemECPrivateKey(resource("game.private.pem")))
+          .withChannelHandlerProvider {
+            LoginProtocolHandler(LoginServerProtocol(), coroutineScope, userAuthenticationService)
+          }
+          .build()
   server.start()
 }

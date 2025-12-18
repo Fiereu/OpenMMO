@@ -7,12 +7,10 @@ import de.fiereu.openmmo.server.login.repositories.UserTokenRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import java.util.Optional
 
-/**
- * A Service handling all kinds of User Authentication and Authorization.
- */
+/** A Service handling all kinds of User Authentication and Authorization. */
 class UserAuthenticationService(
-  private val userRepository: UserRepository,
-  private val userTokenRepository: UserTokenRepository,
+    private val userRepository: UserRepository,
+    private val userTokenRepository: UserTokenRepository,
 ) {
   private val log = KotlinLogging.logger {}
 
