@@ -20,6 +20,7 @@ typesafe-config = "1.4.4"
 dagger = "2.57"
 ksp = "2.2.10-2.0.2"
 ineter = "0.3.1"
+guava = "33.5.0-jre"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -52,6 +53,7 @@ dagger = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 ineter = { module = "com.github.maltalex:ineter", version.ref = "ineter" }
+guava = { module = "com.google.guava:guava", version.ref = "guava" }
 
 [bundles]
 crypto = ["bouncycastle-pkix", "bouncycastle-provider"]

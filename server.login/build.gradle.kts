@@ -22,6 +22,7 @@ dependencies {
   implementation(project(":protocol.login"))
   implementation(libs.logback)
   implementation(libs.kotlinx.coroutines)
+  implementation(libs.guava)
 
   runtimeOnly(libs.postgresql)
 
