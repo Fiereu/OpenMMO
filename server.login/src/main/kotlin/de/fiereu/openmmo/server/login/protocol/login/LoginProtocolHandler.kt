@@ -18,13 +18,13 @@ import io.netty.channel.ChannelHandlerContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-private val log = KotlinLogging.logger {}
-
 class LoginProtocolHandler(
   protocol: Protocol,
   private val coroutineScope: CoroutineScope,
   private val userAuthenticationService: UserAuthenticationService
 ) : ProtocolHandler(protocol) {
+
+  private val log = KotlinLogging.logger {}
 
   override fun onActive(ctx: ChannelHandlerContext) {
     log.info { "Client ${ctx.channel().remoteAddress()} swapped to login protocol." }

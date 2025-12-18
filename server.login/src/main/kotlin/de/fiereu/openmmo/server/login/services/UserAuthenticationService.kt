@@ -2,8 +2,7 @@ package de.fiereu.openmmo.server.login.services
 
 import de.fiereu.openmmo.common.decodeHex
 import de.fiereu.openmmo.server.login.repositories.UserRepository
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 /**
  * A Service handling all kinds of User Authentication and Authorization.
@@ -11,7 +10,7 @@ import org.slf4j.LoggerFactory
 class UserAuthenticationService(
   private val userRepository: UserRepository,
 ) {
-  private val log: Logger = LoggerFactory.getLogger(UserAuthenticationService::class.java)
+  private val log = KotlinLogging.logger {}
 
   /**
    * Check if a certain Username and SHA-1 Hashed Password combo exists in the Database.
