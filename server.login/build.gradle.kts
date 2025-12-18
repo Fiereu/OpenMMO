@@ -35,6 +35,8 @@ dependencies {
   testImplementation(libs.bundles.kotest)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.mockk)
+  testImplementation(libs.testcontainers.core)
+  testImplementation(libs.testcontainers.postgresql)
 }
 
 application { mainClass.set("de.fiereu.openmmo.server.login.LoginServerKt") }

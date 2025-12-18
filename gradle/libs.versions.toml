@@ -21,6 +21,8 @@ dagger = "2.57"
 ksp = "2.2.10-2.0.2"
 ineter = "0.3.1"
 guava = "33.5.0-jre"
+testcontainers = "2.0.3"
+testcontainers-postgresql = "1.21.4"
 
 [libraries]
 kotlinGradlePlugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -54,6 +56,8 @@ dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = 
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
 ineter = { module = "com.github.maltalex:ineter", version.ref = "ineter" }
 guava = { module = "com.google.guava:guava", version.ref = "guava" }
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:postgresql", version.ref = "testcontainers-postgresql" }
 
 [bundles]
 crypto = ["bouncycastle-pkix", "bouncycastle-provider"]
