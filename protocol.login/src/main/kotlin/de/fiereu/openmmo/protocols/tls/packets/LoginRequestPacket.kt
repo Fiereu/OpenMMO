@@ -7,12 +7,6 @@ import de.fiereu.openmmo.protocols.readUtf16LE
 import de.fiereu.openmmo.protocols.writeUtf16LE
 import io.netty.buffer.ByteBuf
 
-interface LoginMethod
-
-data class PasswordLogin(val password: String, val stayLoggedIn: Boolean) : LoginMethod
-
-data class TokenLogin(val token: ByteArray) : LoginMethod
-
 data class LoginRequestPacket(
     val username: String,
     val manualLogin: Boolean,
@@ -25,6 +19,15 @@ data class LoginRequestPacket(
     val hardwareInfoCache: ByteArray
 )
 
+sealed interface LoginMethod {
+    companion object {
+        const val TYPE_PASSWORD = 0x00
+        const val TYPE_TOKEN    = 0x01
+    }
+    data class Password(val password: String, val stayLoggedIn: Boolean) : LoginMethod
+    data class Token(val token: ByteArray) : LoginMethod
+}
+
 class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
   override fun serialize(packet: LoginRequestPacket, buffer: ByteBuf) {
     buffer.writeUtf16LE(packet.username)
@@ -33,13 +36,13 @@ class LoginRequestPacketSerializer : PacketSerializer<LoginRequestPacket> {
     buffer.writeBytes(packet.hwid)
 
     when (packet.method) {
-      is PasswordLogin -> {
-        buffer.writeByte(0) // Method type: Password
+      is LoginMethod.Password -> {
+        buffer.writeByte(LoginMethod.TYPE_PASSWORD)
         buffer.writeUtf16LE(packet.method.password)
         buffer.writeBoolean(packet.method.stayLoggedIn)
       }
-      is TokenLogin -> {
-        buffer.writeByte(1) // Method type: Token
+      is LoginMethod.Token -> {
+        buffer.writeByte(LoginMethod.TYPE_TOKEN)
         buffer.writeByte(packet.method.token.size)
         buffer.writeBytes(packet.method.token)
       }
@@ -66,17 +69,17 @@ class LoginRequestPacketDeserializer : PacketDeserializer<LoginRequestPacket> {
     val methodType = buffer.readByte().toInt()
     val method: LoginMethod =
         when (methodType) {
-          0 -> { // Password
+          LoginMethod.TYPE_PASSWORD -> {
             val password = buffer.readUtf16LE()
             val stayLoggedIn = buffer.readBoolean()
-            PasswordLogin(password, stayLoggedIn)
+              LoginMethod.Password(password, stayLoggedIn)
           }
 
-          1 -> { // Token
+          LoginMethod.TYPE_TOKEN -> {
             val tokenSize = buffer.readUnsignedByte().toInt()
             val token = ByteArray(tokenSize)
             buffer.readBytes(token)
-            TokenLogin(token)
+              LoginMethod.Token(token)
           }
 
           else -> throw IllegalArgumentException("Unknown login method type: $methodType")
