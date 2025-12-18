@@ -5,6 +5,7 @@ package de.fiereu.openmmo.server.login.jooq
 
 
 import de.fiereu.openmmo.server.login.jooq.tables.User
+import de.fiereu.openmmo.server.login.jooq.tables.UserToken
 
 import kotlin.collections.List
 
@@ -32,9 +33,15 @@ open class Public : SchemaImpl(DSL.name("public"), DefaultCatalog.DEFAULT_CATALO
      */
     val USER: User get() = User.USER
 
+    /**
+     * The table <code>public.user_token</code>.
+     */
+    val USER_TOKEN: UserToken get() = UserToken.USER_TOKEN
+
     override fun getCatalog(): Catalog = DefaultCatalog.DEFAULT_CATALOG
 
     override fun getTables(): List<Table<*>> = listOf(
-        User.USER
+        User.USER,
+        UserToken.USER_TOKEN
     )
 }

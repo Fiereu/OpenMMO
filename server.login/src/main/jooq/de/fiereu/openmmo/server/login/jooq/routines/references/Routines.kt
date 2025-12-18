@@ -15,6 +15,7 @@ import de.fiereu.openmmo.server.login.jooq.routines.Digest1
 import de.fiereu.openmmo.server.login.jooq.routines.Digest2
 import de.fiereu.openmmo.server.login.jooq.routines.Encrypt
 import de.fiereu.openmmo.server.login.jooq.routines.EncryptIv
+import de.fiereu.openmmo.server.login.jooq.routines.FipsMode
 import de.fiereu.openmmo.server.login.jooq.routines.GenRandomBytes
 import de.fiereu.openmmo.server.login.jooq.routines.GenRandomUuid
 import de.fiereu.openmmo.server.login.jooq.routines.GenSalt1
@@ -514,6 +515,27 @@ fun encryptIv(
     f.set__2(__2)
     f.set__3(__3)
     f.set__4(__4)
+
+    return f.asField()
+}
+
+/**
+ * Call <code>public.fips_mode</code>
+ */
+fun fipsMode(
+      configuration: Configuration
+): Boolean? {
+    val f = FipsMode()
+
+    f.execute(configuration)
+    return f.returnValue
+}
+
+/**
+ * Get <code>public.fips_mode</code> as a field.
+ */
+fun fipsMode(): Field<Boolean?> {
+    val f = FipsMode()
 
     return f.asField()
 }

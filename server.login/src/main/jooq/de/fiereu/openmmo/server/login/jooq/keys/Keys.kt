@@ -6,11 +6,15 @@ package de.fiereu.openmmo.server.login.jooq.keys
 
 
 import de.fiereu.openmmo.server.login.jooq.tables.User
+import de.fiereu.openmmo.server.login.jooq.tables.UserToken
 import de.fiereu.openmmo.server.login.jooq.tables.records.UserRecord
+import de.fiereu.openmmo.server.login.jooq.tables.records.UserTokenRecord
 
+import org.jooq.ForeignKey
 import org.jooq.UniqueKey
 import org.jooq.impl.DSL
 import org.jooq.impl.Internal
+import org.jooq.impl.QOM.ForeignKeyRule
 
 
 
@@ -20,3 +24,12 @@ import org.jooq.impl.Internal
 
 val USER_PKEY: UniqueKey<UserRecord> = Internal.createUniqueKey(User.USER, DSL.name("user_pkey"), arrayOf(User.USER.ID), true)
 val USER_USERNAME_KEY: UniqueKey<UserRecord> = Internal.createUniqueKey(User.USER, DSL.name("user_username_key"), arrayOf(User.USER.USERNAME), true)
+val USER_TOKEN_PKEY: UniqueKey<UserTokenRecord> = Internal.createUniqueKey(UserToken.USER_TOKEN, DSL.name("user_token_pkey"), arrayOf(UserToken.USER_TOKEN.ID), true)
+val USER_TOKEN_TOKEN_KEY: UniqueKey<UserTokenRecord> = Internal.createUniqueKey(UserToken.USER_TOKEN, DSL.name("user_token_token_key"), arrayOf(UserToken.USER_TOKEN.TOKEN), true)
+val USER_TOKEN_USER_ID_KEY: UniqueKey<UserTokenRecord> = Internal.createUniqueKey(UserToken.USER_TOKEN, DSL.name("user_token_user_id_key"), arrayOf(UserToken.USER_TOKEN.USER_ID), true)
+
+// -------------------------------------------------------------------------
+// FOREIGN KEY definitions
+// -------------------------------------------------------------------------
+
+val USER_TOKEN__USER_TOKEN_USER_ID_FKEY: ForeignKey<UserTokenRecord, UserRecord> = Internal.createForeignKey(UserToken.USER_TOKEN, DSL.name("user_token_user_id_fkey"), arrayOf(UserToken.USER_TOKEN.USER_ID), de.fiereu.openmmo.server.login.jooq.keys.USER_PKEY, arrayOf(User.USER.ID), true, ForeignKeyRule.NO_ACTION, ForeignKeyRule.NO_ACTION)

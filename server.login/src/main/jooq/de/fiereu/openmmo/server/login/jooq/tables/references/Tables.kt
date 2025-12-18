@@ -6,6 +6,7 @@ package de.fiereu.openmmo.server.login.jooq.tables.references
 
 
 import de.fiereu.openmmo.server.login.jooq.tables.User
+import de.fiereu.openmmo.server.login.jooq.tables.UserToken
 
 
 
@@ -13,3 +14,8 @@ import de.fiereu.openmmo.server.login.jooq.tables.User
  * The table <code>public.user</code>.
  */
 val USER: User = User.USER
+
+/**
+ * The table <code>public.user_token</code>.
+ */
+val USER_TOKEN: UserToken = UserToken.USER_TOKEN

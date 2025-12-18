@@ -15,3 +15,14 @@ select 'admin',
        digest('admin', 'sha1')
 where not exists(select 1
                  from "user");
+
+create table
+    "user_token"
+(
+    id         serial    not null,
+    created_at timestamp not null default current_timestamp,
+    user_id    int       not null unique, -- only one Token per User
+    token      bytea     not null unique,
+    primary key (id),
+    foreign key (user_id) references "user" (id)
+);

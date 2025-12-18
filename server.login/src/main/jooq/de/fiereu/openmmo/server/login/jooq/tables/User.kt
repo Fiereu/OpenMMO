@@ -6,7 +6,9 @@ package de.fiereu.openmmo.server.login.jooq.tables
 
 import de.fiereu.openmmo.server.login.jooq.Public
 import de.fiereu.openmmo.server.login.jooq.keys.USER_PKEY
+import de.fiereu.openmmo.server.login.jooq.keys.USER_TOKEN__USER_TOKEN_USER_ID_FKEY
 import de.fiereu.openmmo.server.login.jooq.keys.USER_USERNAME_KEY
+import de.fiereu.openmmo.server.login.jooq.tables.UserToken.UserTokenPath
 import de.fiereu.openmmo.server.login.jooq.tables.records.UserRecord
 
 import java.time.LocalDateTime
@@ -20,6 +22,7 @@ import org.jooq.ForeignKey
 import org.jooq.Identity
 import org.jooq.InverseForeignKey
 import org.jooq.Name
+import org.jooq.Path
 import org.jooq.PlainSQL
 import org.jooq.QueryPart
 import org.jooq.Record
@@ -32,6 +35,7 @@ import org.jooq.TableField
 import org.jooq.TableOptions
 import org.jooq.UniqueKey
 import org.jooq.impl.DSL
+import org.jooq.impl.Internal
 import org.jooq.impl.SQLDataType
 import org.jooq.impl.TableImpl
 
@@ -111,10 +115,39 @@ open class User(
      * Create a <code>public.user</code> table reference
      */
     constructor(): this(DSL.name("user"), null)
+
+    constructor(path: Table<out Record>, childPath: ForeignKey<out Record, UserRecord>?, parentPath: InverseForeignKey<out Record, UserRecord>?): this(Internal.createPathAlias(path, childPath, parentPath), path, childPath, parentPath, USER, null, null)
+
+    /**
+     * A subtype implementing {@link Path} for simplified path-based joins.
+     */
+    open class UserPath : User, Path<UserRecord> {
+        constructor(path: Table<out Record>, childPath: ForeignKey<out Record, UserRecord>?, parentPath: InverseForeignKey<out Record, UserRecord>?): super(path, childPath, parentPath)
+        private constructor(alias: Name, aliased: Table<UserRecord>): super(alias, aliased)
+        override fun `as`(alias: String): UserPath = UserPath(DSL.name(alias), this)
+        override fun `as`(alias: Name): UserPath = UserPath(alias, this)
+        override fun `as`(alias: Table<*>): UserPath = UserPath(alias.qualifiedName, this)
+    }
     override fun getSchema(): Schema? = if (aliased()) null else Public.PUBLIC
     override fun getIdentity(): Identity<UserRecord, Int?> = super.getIdentity() as Identity<UserRecord, Int?>
     override fun getPrimaryKey(): UniqueKey<UserRecord> = USER_PKEY
     override fun getUniqueKeys(): List<UniqueKey<UserRecord>> = listOf(USER_USERNAME_KEY)
+
+    private lateinit var _userToken: UserTokenPath
+
+    /**
+     * Get the implicit to-many join path to the <code>public.user_token</code>
+     * table
+     */
+    fun userToken(): UserTokenPath {
+        if (!this::_userToken.isInitialized)
+            _userToken = UserTokenPath(this, null, USER_TOKEN__USER_TOKEN_USER_ID_FKEY.inverseKey)
+
+        return _userToken;
+    }
+
+    val userToken: UserTokenPath
+        get(): UserTokenPath = userToken()
     override fun `as`(alias: String): User = User(DSL.name(alias), this)
     override fun `as`(alias: Name): User = User(alias, this)
     override fun `as`(alias: Table<*>): User = User(alias.qualifiedName, this)
