@@ -27,5 +27,3 @@ spotless {
     endWithNewline()
   }
 }
-
-tasks.withType<Test> { dependsOn("spotlessCheck") }
