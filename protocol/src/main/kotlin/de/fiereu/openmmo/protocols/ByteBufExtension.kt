@@ -4,12 +4,14 @@ import com.github.maltalex.ineter.base.IPAddress
 import com.github.maltalex.ineter.base.IPv4Address
 import com.github.maltalex.ineter.base.IPv6Address
 import io.netty.buffer.ByteBuf
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 fun ByteBuf.readCharLE(): Char {
   return ((readUnsignedByte().toInt() or (readUnsignedByte().toInt() shl 8)) and 0xFFFF).toChar()
 }
 
-fun ByteBuf.writeCharLE(value: Char) {
+fun ByteBuf.writeCharLE(value: Char): ByteBuf = apply {
   writeByte(value.code and 0xFF)
   writeByte((value.code shr 8) and 0xFF)
 }
@@ -23,7 +25,7 @@ fun ByteBuf.readUtf16LE(): String {
   return builder.toString()
 }
 
-fun ByteBuf.writeUtf16LE(value: String) {
+fun ByteBuf.writeUtf16LE(value: String): ByteBuf = apply {
   for (c in value) {
     writeCharLE(c)
   }
@@ -46,7 +48,7 @@ fun ByteBuf.readIpLE(): IPAddress {
   }
 }
 
-fun ByteBuf.writeIpLE(ipAddress: IPAddress) {
+fun ByteBuf.writeIpLE(ipAddress: IPAddress): ByteBuf = apply {
   when (ipAddress) {
     is IPv4Address -> {
       writeByte(4)
@@ -71,7 +73,17 @@ fun ByteBuf.readIpRangeLE(): Pair<IPAddress, IPAddress> {
   return Pair(start, end)
 }
 
-fun ByteBuf.writeIpRangeLE(start: IPAddress, end: IPAddress) {
+fun ByteBuf.writeIpRangeLE(start: IPAddress, end: IPAddress): ByteBuf = apply {
   writeIpLE(start)
   writeIpLE(end)
 }
+
+fun ByteBuf.readEpochSeconds(): LocalDateTime =
+    LocalDateTime.ofEpochSecond(readIntLE().toLong(), 0, ZoneOffset.UTC)
+
+fun ByteBuf.writeEpochSecond(dateTime: LocalDateTime): ByteBuf =
+    writeIntLE(dateTime.toEpochSecond(ZoneOffset.UTC).toInt())
+
+fun ByteBuf.writeByte(byte: Byte): ByteBuf = writeByte(byte.toInt())
+
+fun ByteBuf.writeShortLE(short: Short): ByteBuf = writeShortLE(short.toInt())

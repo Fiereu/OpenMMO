@@ -15,16 +15,16 @@ abstract class GameAuthenticationData
 
 /**
  * Used when a player reconnects to the game server after a disconnection. This data typically
- * includes the player's unique identifier and a session key that was issued by the login server to
+ * includes the sessions unique id and a session key that was issued by the login server to
  * re-establish the session.
  */
-data class ReconnectAuthData(val playerId: Long, val sessionKey: ByteArray) :
+data class ReconnectAuthData(val sessionId: Long, val sessionKey: ByteArray) :
     GameAuthenticationData()
 
 /**
  * Used when a player is joining the game server for the first time after logging in. This data
- * typically includes the user's unique identifier and a session key that was issued by the login
- * server to authenticate the session.
+ * typically includes the user's unique id and a session key that was issued by the login server to
+ * authenticate the session.
  */
 data class NewAuthData(
     val userId: Int,
@@ -59,7 +59,7 @@ class JoinPacketSerializer : PacketSerializer<JoinGamePacket> {
       }
       is ReconnectAuthData -> {
         buffer.writeByte(0x01)
-        buffer.writeLongLE(packet.authData.playerId)
+        buffer.writeLongLE(packet.authData.sessionId)
         buffer.writeByte(packet.authData.sessionKey.size)
         buffer.writeBytes(packet.authData.sessionKey)
       }

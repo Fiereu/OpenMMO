@@ -2,9 +2,7 @@ package de.fiereu.openmmo.protocols.game.packets.builders
 
 import de.fiereu.openmmo.protocols.game.packets.JoinResponsePacket
 
-class JoinResponsePacketBuilder(
-  private val canJoin: Boolean
-) {
+class JoinResponsePacketBuilder(private val canJoin: Boolean) {
   private var playtime: Int = 0
   private var rewardPoints: Int = 0
   private var balance: Int = 0
@@ -35,14 +33,13 @@ class JoinResponsePacketBuilder(
   }
 
   fun build(): JoinResponsePacket {
-    require(canJoin) { "Cannot build a JoinResponsePacket with canJoin=false. Use JoinResponsePacketBuilder.reject() instead." }
+    require(canJoin) {
+      "Cannot build a JoinResponsePacket with canJoin=false. Use JoinResponsePacketBuilder.reject() instead."
+    }
     return JoinResponsePacket(
-      canJoin = true,
-      stats = JoinResponsePacket.GameStats(
-        playtime = playtime,
-        rewardPoints = rewardPoints,
-        balance = balance
-      )
-    )
+        canJoin = true,
+        stats =
+            JoinResponsePacket.GameStats(
+                playtime = playtime, rewardPoints = rewardPoints, balance = balance))
   }
 }

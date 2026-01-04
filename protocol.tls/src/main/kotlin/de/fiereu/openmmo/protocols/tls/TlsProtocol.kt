@@ -22,25 +22,22 @@ import java.security.interfaces.ECPublicKey
  *    (e.g. LoginProtocol) after the handshake is complete.
  */
 abstract class TlsProtocol() : Protocol() {
-  override val async: Boolean
-    get() = false
-  override val compressed: Boolean
-    get() = false
+  override val async: Boolean = false
+  override val compressed: Boolean = false
 }
 
 class TlsServerProtocol(serverKeyPair: Pair<ECPrivateKey, ECPublicKey>) : TlsProtocol() {
   init {
     incomingPacket(0x00u, ClientHelloPacketDeserializer())
-    outgoingPacket(
-        0x01u, ServerHelloPacketSerializer(serverKeyPair.first), ServerHelloPacket::class)
+    outgoingPacket(0x01u, ServerHelloPacketSerializer(serverKeyPair.first))
     incomingPacket(0x02u, ClientReadyPacketDeserializer())
   }
 }
 
 class TlsClientProtocol() : TlsProtocol() {
   init {
-    outgoingPacket(0x00u, ClientHelloPacketSerializer(), ClientHelloPacket::class)
+    outgoingPacket(0x00u, ClientHelloPacketSerializer())
     incomingPacket(0x01u, ServerHelloPacketDeserializer())
-    outgoingPacket(0x02u, ClientReadyPacketSerializer(), ClientReadyPacket::class)
+    outgoingPacket(0x02u, ClientReadyPacketSerializer())
   }
 }

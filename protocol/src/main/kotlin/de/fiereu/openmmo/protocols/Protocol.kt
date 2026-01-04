@@ -57,7 +57,7 @@ abstract class Protocol {
       "Registering incoming packet: opcode=$opcode, deserializer=${deserializer::class.simpleName}"
     }
 
-    incomingPacketRegistry.put(opcode, deserializer)
+    incomingPacketRegistry[opcode] = deserializer
   }
 
   fun <T : Any> registerOutgoing(
@@ -74,7 +74,7 @@ abstract class Protocol {
       error("Data class ${dataClass.simpleName} is already registered with an opcode!")
     }
     dataClassToOpcode[dataClass] = opcode
-    outgoingPacketRegistry.put(opcode, serializer)
+    outgoingPacketRegistry[opcode] = serializer
   }
 
   fun getSerializer(opcode: Opcode): PacketSerializer<*>? {
@@ -94,10 +94,9 @@ fun <T : Any> Protocol.incomingPacket(opcode: UByte, deserializer: PacketDeseria
   this.registerIncoming(Opcode(opcode), deserializer)
 }
 
-fun <T : Any> Protocol.outgoingPacket(
+inline fun <reified T : Any> Protocol.outgoingPacket(
     opcode: UByte,
-    serializer: PacketSerializer<T>,
-    dataClass: KClass<T>
+    serializer: PacketSerializer<T>
 ) {
-  this.registerOutgoing(Opcode(opcode), serializer, dataClass)
+  this.registerOutgoing(Opcode(opcode), serializer, T::class)
 }

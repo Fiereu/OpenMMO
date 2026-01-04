@@ -14,18 +14,14 @@ import java.time.ZoneId
  * seems to also be sent as some kind of time sync packet
  */
 data class JoinResponsePacket(
-  val canJoin: Boolean,
-  val stats: GameStats? = null
-  // we dont need TimeInfo here since it can be calculated on the fly
+    val canJoin: Boolean,
+    val stats: GameStats? = null
+    // we dont need TimeInfo here since it can be calculated on the fly
 ) {
-  data class GameStats(
-    val playtime: Int,
-    val rewardPoints: Int,
-    val balance: Int
-  )
+  data class GameStats(val playtime: Int, val rewardPoints: Int, val balance: Int)
 }
 
-class JoinResponsePacketSerializer : PacketSerializer<JoinResponsePacket> {
+class JoinResponseSerializer : PacketSerializer<JoinResponsePacket> {
   override fun serialize(packet: JoinResponsePacket, buffer: ByteBuf) {
     buffer.writeBoolean(packet.canJoin)
     if (!packet.canJoin) return // no further data is sent
@@ -47,24 +43,16 @@ class JoinResponsePacketSerializer : PacketSerializer<JoinResponsePacket> {
   }
 }
 
-class JoinResponsePacketDeserializer : PacketDeserializer<JoinResponsePacketDeserializer.JoinResponsePacket> {
+class JoinResponseDeserializer : PacketDeserializer<JoinResponseDeserializer.JoinResponsePacket> {
   data class JoinResponsePacket(
-    val canJoin: Boolean,
-    val stats: GameStats? = null,
-    val time: TimeInfo? = null
+      val canJoin: Boolean,
+      val stats: GameStats? = null,
+      val time: TimeInfo? = null
   ) {
 
-    data class GameStats(
-      val playtime: Int,
-      val rewardPoints: Int,
-      val balance: Int
-    )
+    data class GameStats(val playtime: Int, val rewardPoints: Int, val balance: Int)
 
-    data class TimeInfo(
-      val serverDayStartSecond: Int,
-      val serverCurrentSecond: Int
-    )
-
+    data class TimeInfo(val serverDayStartSecond: Int, val serverCurrentSecond: Int)
   }
 
   override fun deserialize(buffer: ByteBuf): JoinResponsePacket {
@@ -84,9 +72,8 @@ class JoinResponsePacketDeserializer : PacketDeserializer<JoinResponsePacketDese
     val serverCurrentSecond = buffer.readUnsignedIntLE().toInt()
 
     return JoinResponsePacket(
-      true,
-      JoinResponsePacket.GameStats(playtime, rewardPoints, balance),
-      JoinResponsePacket.TimeInfo(serverDayStartSecond, serverCurrentSecond)
-    )
+        true,
+        JoinResponsePacket.GameStats(playtime, rewardPoints, balance),
+        JoinResponsePacket.TimeInfo(serverDayStartSecond, serverCurrentSecond))
   }
 }
