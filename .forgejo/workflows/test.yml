@@ -25,5 +25,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      - name: Run spotless checks
+        run: ./gradlew spotlessCheck
+        continue-on-error: true
+
       - name: Run tests
         run: ./gradlew test
