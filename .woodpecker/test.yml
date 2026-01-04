@@ -1,0 +1,19 @@
+when:
+  event: [push, pull_request, manual]
+
+steps:
+  - name: setup-gradle
+    image: gradle:8-jdk24
+    commands:
+      - chmod +x ./gradlew
+
+  - name: spotless-check
+    image: gradle:8-jdk24
+    commands:
+      - ./gradlew spotlessCheck
+    failure: ignore
+
+  - name: run-tests
+    image: gradle:8-jdk24
+    commands:
+      - ./gradlew test

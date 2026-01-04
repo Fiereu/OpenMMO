@@ -1,0 +1,27 @@
+when:
+  branch: main
+  event: push
+
+steps:
+  - name: spotless-apply
+    image: gradle:8-jdk24
+    commands:
+      - chmod +x ./gradlew
+      - ./gradlew spotlessApply
+
+  - name: commit-changes
+    image: alpine/git:latest
+    commands:
+      - git config --local user.email "openmmo-bot@forge.fiereu.de"
+      - git config --local user.name "openmmo-bot"
+      - git add -A
+      - |
+        if ! git diff --staged --quiet; then
+          git commit -m "Apply spotless formatting [skip ci]"
+          git push origin ${CI_COMMIT_BRANCH}
+        else
+          echo "No formatting changes needed"
+        fi
+    environment:
+      GIT_PASSWORD:
+        from_secret: git_token
